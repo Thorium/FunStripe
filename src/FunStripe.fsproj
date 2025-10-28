@@ -30,6 +30,7 @@
     <Compile Include="Json/Transforms.fs" />
     <Compile Include="Config.fs" />
     <Compile Include="Util.fs" />
+    <Compile Include="WebhookSecurity.fs" />
     <Compile Include="AsyncResult.fs" />
     <Compile Include="ModelBuilder.fs" />
     <Compile Include="RequestBuilder.fs" />
@@ -45,5 +46,6 @@
     <PackageReference Include="FSharp.Data.Json.Core" Version="6.6.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 </Project>
