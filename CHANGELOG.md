@@ -10,6 +10,14 @@ Version numbers follow the `FunStripeLite` package from v1.0.0 onward. Where the
 
 ### Changed
 - Regenerated against Stripe OpenAPI spec `2026-06-24.dahlia` (was `2026-05-27.dahlia`)
+- `SetupAttempt` Pix details: field `SetupAttemptPaymentMethodDetailsPix` replaced by `Fingerprint` (uniquely identifies the Pix account), tracking Stripe's spec
+
+### Added
+- `Satispay` payment method support across `PaymentMethod`, `SetupAttempt`, and `Checkout` (including `PaymentMethodOptionsSatispay` with `setup_future_usage`)
+- `Checkout`: `Sunbit` payment method options (`capture_method`, `setup_future_usage`) and `WeChat Pay` options (`app_id`, `client`: Android/iOS/Web)
+- `Disputes`: Mastercard compliance evidence submission (`MastercardCompliance` / `FeeAcknowledged`)
+- `Reserve`: `ReleaseDetails` on reserve holds (per-release amounts and originating `ReserveRelease`)
+- `Event`: new billing event types (`billing.meter.*`, `billing.credit_balance_transaction.created`, `billing.credit_grant.updated`)
 
 ## [2.1.0] - 2026-06-17
 
