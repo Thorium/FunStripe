@@ -135,3 +135,7 @@ jobs:
             ```
           branch: update/stripe-openapi-${{ steps.stripe.outputs.spec_version }}
           delete-branch: true
+          # Put the maintainer on the PR so GitHub emails a review request when it opens
+          # (bot-authored PRs don't otherwise notify, even when watching the repo).
+          assignees: simontreanor
+          reviewers: simontreanor
