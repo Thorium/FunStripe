@@ -10,7 +10,7 @@ open Stripe.IssuingToken
 open Stripe.PaymentMethod
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module IssuingAuthorizations =
 
     type ListOptions =
@@ -296,7 +296,7 @@ module IssuingCardholders =
 
     type Create'IndividualCardIssuing =
         {
-            /// Information about cardholder acceptance of Celtic [Authorized User Terms](https://stripe.com/docs/issuing/cards#accept-authorized-user-terms). Required for cards backed by a Celtic program.
+            /// Information about cardholder acceptance of Celtic [Authorized User Terms](https://docs.stripe.com/issuing/compliance-us#issuing-terms). Required for cards backed by a Celtic program.
             [<Config.Form>]
             UserTermsAcceptance: Create'IndividualCardIssuingUserTermsAcceptance option
         }
@@ -1397,7 +1397,7 @@ module IssuingCardholders =
             /// The cardholder's phone number. This will be transformed to [E.164](https://en.wikipedia.org/wiki/E.164) if it is not provided in that format already. This is required for all cardholders who will be creating EU cards. See the [3D Secure documentation](https://docs.stripe.com/issuing/3d-secure#when-is-3d-secure-applied) for more details.
             [<Config.Form>]
             PhoneNumber: string option
-            /// The cardholder’s preferred locales (languages), ordered by preference. Locales can be `da`, `de`, `en`, `es`, `fr`, `it`, `pl`, or `sv`.
+            /// The cardholder’s preferred locales (languages), ordered by preference. Locales can be `de`, `en`, `es`, `fr`, or `it`.
             /// This changes the language of the [3D Secure flow](https://docs.stripe.com/issuing/3d-secure) and one-time password messages sent to the cardholder.
             [<Config.Form>]
             PreferredLocales: Create'PreferredLocales list option
@@ -1527,7 +1527,7 @@ module IssuingCardholders =
 
     type Update'IndividualCardIssuing =
         {
-            /// Information about cardholder acceptance of Celtic [Authorized User Terms](https://stripe.com/docs/issuing/cards#accept-authorized-user-terms). Required for cards backed by a Celtic program.
+            /// Information about cardholder acceptance of Celtic [Authorized User Terms](https://docs.stripe.com/issuing/compliance-us#issuing-terms). Required for cards backed by a Celtic program.
             [<Config.Form>]
             UserTermsAcceptance: Update'IndividualCardIssuingUserTermsAcceptance option
         }
@@ -2623,7 +2623,7 @@ module IssuingCardholders =
             /// The cardholder's phone number. This is required for all cardholders who will be creating EU cards. See the [3D Secure documentation](https://docs.stripe.com/issuing/3d-secure) for more details.
             [<Config.Form>]
             PhoneNumber: string option
-            /// The cardholder’s preferred locales (languages), ordered by preference. Locales can be `da`, `de`, `en`, `es`, `fr`, `it`, `pl`, or `sv`.
+            /// The cardholder’s preferred locales (languages), ordered by preference. Locales can be `de`, `en`, `es`, `fr`, or `it`.
             /// This changes the language of the [3D Secure flow](https://docs.stripe.com/issuing/3d-secure) and one-time password messages sent to the cardholder.
             [<Config.Form>]
             PreferredLocales: Update'PreferredLocales list option
@@ -2857,6 +2857,9 @@ module IssuingCards =
             /// Address validation settings.
             [<Config.Form>]
             AddressValidation: Create'ShippingAddressValidation option
+            /// The name of the business at the shipping address, used on the shipping label to ensure delivery when the card is shipped to a cardholder's workplace. Allowed characters: `A-Z`, `a-z`, `0-9`, ` `, `.`, `-`. All other characters are stripped or ASCII-normalized when printed.
+            [<Config.Form>]
+            BusinessName: string option
             /// Customs information for the shipment.
             [<Config.Form>]
             Customs: Create'ShippingCustoms option
@@ -2878,10 +2881,11 @@ module IssuingCards =
         }
 
     type Create'Shipping with
-        static member New(?address: Create'ShippingAddress, ?addressValidation: Create'ShippingAddressValidation, ?customs: Create'ShippingCustoms, ?name: string, ?phoneNumber: string, ?requireSignature: bool, ?service: Create'ShippingService, ?type': Create'ShippingType) =
+        static member New(?address: Create'ShippingAddress, ?addressValidation: Create'ShippingAddressValidation, ?businessName: string, ?customs: Create'ShippingCustoms, ?name: string, ?phoneNumber: string, ?requireSignature: bool, ?service: Create'ShippingService, ?type': Create'ShippingType) =
             {
                 Address = address
                 AddressValidation = addressValidation
+                BusinessName = businessName
                 Customs = customs
                 Name = name
                 PhoneNumber = phoneNumber
@@ -4054,6 +4058,9 @@ module IssuingCards =
             /// Address validation settings.
             [<Config.Form>]
             AddressValidation: Update'ShippingAddressValidation option
+            /// The name of the business at the shipping address, used on the shipping label to ensure delivery when the card is shipped to a cardholder's workplace. Allowed characters: `A-Z`, `a-z`, `0-9`, ` `, `.`, `-`. All other characters are stripped or ASCII-normalized when printed.
+            [<Config.Form>]
+            BusinessName: string option
             /// Customs information for the shipment.
             [<Config.Form>]
             Customs: Update'ShippingCustoms option
@@ -4075,10 +4082,11 @@ module IssuingCards =
         }
 
     type Update'Shipping with
-        static member New(?address: Update'ShippingAddress, ?addressValidation: Update'ShippingAddressValidation, ?customs: Update'ShippingCustoms, ?name: string, ?phoneNumber: string, ?requireSignature: bool, ?service: Update'ShippingService, ?type': Update'ShippingType) =
+        static member New(?address: Update'ShippingAddress, ?addressValidation: Update'ShippingAddressValidation, ?businessName: string, ?customs: Update'ShippingCustoms, ?name: string, ?phoneNumber: string, ?requireSignature: bool, ?service: Update'ShippingService, ?type': Update'ShippingType) =
             {
                 Address = address
                 AddressValidation = addressValidation
+                BusinessName = businessName
                 Customs = customs
                 Name = name
                 PhoneNumber = phoneNumber
