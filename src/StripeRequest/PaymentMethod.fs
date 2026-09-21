@@ -13,7 +13,7 @@ open Stripe.SubscriptionItem
 open Stripe.SubscriptionSchedule
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module Account =
 
     type RetrieveOptions =
@@ -260,15 +260,19 @@ module AccountSessions =
             /// Whether sending refunds is enabled. This is `true` by default.
             [<Config.Form>]
             RefundManagement: bool option
+            /// Whether to allow connected accounts to submit disputes using Smart Disputes. Defaults to the value of `dispute_management`.
+            [<Config.Form>]
+            SmartDisputesManagement: bool option
         }
 
     type Create'ComponentsDisputesListFeatures with
-        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool) =
+        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool, ?smartDisputesManagement: bool) =
             {
                 CapturePayments = capturePayments
                 DestinationOnBehalfOfChargeManagement = destinationOnBehalfOfChargeManagement
                 DisputeManagement = disputeManagement
                 RefundManagement = refundManagement
+                SmartDisputesManagement = smartDisputesManagement
             }
 
     type Create'ComponentsDisputesList =
@@ -551,15 +555,19 @@ module AccountSessions =
             /// Whether sending refunds is enabled. This is `true` by default.
             [<Config.Form>]
             RefundManagement: bool option
+            /// Whether to allow connected accounts to submit disputes using Smart Disputes. Defaults to the value of `dispute_management`.
+            [<Config.Form>]
+            SmartDisputesManagement: bool option
         }
 
     type Create'ComponentsPaymentDetailsFeatures with
-        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool) =
+        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool, ?smartDisputesManagement: bool) =
             {
                 CapturePayments = capturePayments
                 DestinationOnBehalfOfChargeManagement = destinationOnBehalfOfChargeManagement
                 DisputeManagement = disputeManagement
                 RefundManagement = refundManagement
+                SmartDisputesManagement = smartDisputesManagement
             }
 
     type Create'ComponentsPaymentDetails =
@@ -590,14 +598,18 @@ module AccountSessions =
             /// Whether sending refunds is enabled. This is `true` by default.
             [<Config.Form>]
             RefundManagement: bool option
+            /// Whether to allow connected accounts to submit disputes using Smart Disputes. Defaults to the value of `dispute_management`.
+            [<Config.Form>]
+            SmartDisputesManagement: bool option
         }
 
     type Create'ComponentsPaymentDisputesFeatures with
-        static member New(?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool) =
+        static member New(?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool, ?smartDisputesManagement: bool) =
             {
                 DestinationOnBehalfOfChargeManagement = destinationOnBehalfOfChargeManagement
                 DisputeManagement = disputeManagement
                 RefundManagement = refundManagement
+                SmartDisputesManagement = smartDisputesManagement
             }
 
     type Create'ComponentsPaymentDisputes =
@@ -617,6 +629,36 @@ module AccountSessions =
                 Features = features
             }
 
+    type Create'ComponentsPaymentMethodSettingsFeatures =
+        {
+            /// Whether Stripe user authentication is disabled. This value can only be `true` for accounts where `controller.requirement_collection` is `application` for the account. This is `false` by default.
+            [<Config.Form>]
+            DisableStripeUserAuthentication: bool option
+        }
+
+    type Create'ComponentsPaymentMethodSettingsFeatures with
+        static member New(?disableStripeUserAuthentication: bool) =
+            {
+                DisableStripeUserAuthentication = disableStripeUserAuthentication
+            }
+
+    type Create'ComponentsPaymentMethodSettings =
+        {
+            /// Whether the embedded component is enabled.
+            [<Config.Form>]
+            Enabled: bool option
+            /// The list of features enabled in the embedded component.
+            [<Config.Form>]
+            Features: Create'ComponentsPaymentMethodSettingsFeatures option
+        }
+
+    type Create'ComponentsPaymentMethodSettings with
+        static member New(?enabled: bool, ?features: Create'ComponentsPaymentMethodSettingsFeatures) =
+            {
+                Enabled = enabled
+                Features = features
+            }
+
     type Create'ComponentsPaymentsFeatures =
         {
             /// Whether to allow capturing and cancelling payment intents. This is `true` by default.
@@ -631,15 +673,19 @@ module AccountSessions =
             /// Whether sending refunds is enabled. This is `true` by default.
             [<Config.Form>]
             RefundManagement: bool option
+            /// Whether to allow connected accounts to submit disputes using Smart Disputes. Defaults to the value of `dispute_management`.
+            [<Config.Form>]
+            SmartDisputesManagement: bool option
         }
 
     type Create'ComponentsPaymentsFeatures with
-        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool) =
+        static member New(?capturePayments: bool, ?destinationOnBehalfOfChargeManagement: bool, ?disputeManagement: bool, ?refundManagement: bool, ?smartDisputesManagement: bool) =
             {
                 CapturePayments = capturePayments
                 DestinationOnBehalfOfChargeManagement = destinationOnBehalfOfChargeManagement
                 DisputeManagement = disputeManagement
                 RefundManagement = refundManagement
+                SmartDisputesManagement = smartDisputesManagement
             }
 
     type Create'ComponentsPayments =
@@ -834,6 +880,9 @@ module AccountSessions =
             /// Configuration for the [payment disputes](/connect/supported-embedded-components/payment-disputes/) embedded component.
             [<Config.Form>]
             PaymentDisputes: Create'ComponentsPaymentDisputes option
+            /// Configuration for the [payment method settings](/connect/supported-embedded-components/payment-method-settings/) embedded component.
+            [<Config.Form>]
+            PaymentMethodSettings: Create'ComponentsPaymentMethodSettings option
             /// Configuration for the [payments](/connect/supported-embedded-components/payments/) embedded component.
             [<Config.Form>]
             Payments: Create'ComponentsPayments option
@@ -858,7 +907,7 @@ module AccountSessions =
         }
 
     type Create'Components with
-        static member New(?accountManagement: Create'ComponentsAccountManagement, ?accountOnboarding: Create'ComponentsAccountOnboarding, ?balanceReport: Create'ComponentsBalanceReport, ?balances: Create'ComponentsBalances, ?disputesList: Create'ComponentsDisputesList, ?documents: Create'ComponentsDocuments, ?financialAccount: Create'ComponentsFinancialAccount, ?financialAccountTransactions: Create'ComponentsFinancialAccountTransactions, ?instantPayoutsPromotion: Create'ComponentsInstantPayoutsPromotion, ?issuingCard: Create'ComponentsIssuingCard, ?issuingCardsList: Create'ComponentsIssuingCardsList, ?notificationBanner: Create'ComponentsNotificationBanner, ?paymentDetails: Create'ComponentsPaymentDetails, ?paymentDisputes: Create'ComponentsPaymentDisputes, ?payments: Create'ComponentsPayments, ?payoutDetails: Create'ComponentsPayoutDetails, ?payoutReconciliationReport: Create'ComponentsPayoutReconciliationReport, ?payouts: Create'ComponentsPayouts, ?payoutsList: Create'ComponentsPayoutsList, ?taxRegistrations: Create'ComponentsTaxRegistrations, ?taxSettings: Create'ComponentsTaxSettings) =
+        static member New(?accountManagement: Create'ComponentsAccountManagement, ?accountOnboarding: Create'ComponentsAccountOnboarding, ?balanceReport: Create'ComponentsBalanceReport, ?balances: Create'ComponentsBalances, ?disputesList: Create'ComponentsDisputesList, ?documents: Create'ComponentsDocuments, ?financialAccount: Create'ComponentsFinancialAccount, ?financialAccountTransactions: Create'ComponentsFinancialAccountTransactions, ?instantPayoutsPromotion: Create'ComponentsInstantPayoutsPromotion, ?issuingCard: Create'ComponentsIssuingCard, ?issuingCardsList: Create'ComponentsIssuingCardsList, ?notificationBanner: Create'ComponentsNotificationBanner, ?paymentDetails: Create'ComponentsPaymentDetails, ?paymentDisputes: Create'ComponentsPaymentDisputes, ?paymentMethodSettings: Create'ComponentsPaymentMethodSettings, ?payments: Create'ComponentsPayments, ?payoutDetails: Create'ComponentsPayoutDetails, ?payoutReconciliationReport: Create'ComponentsPayoutReconciliationReport, ?payouts: Create'ComponentsPayouts, ?payoutsList: Create'ComponentsPayoutsList, ?taxRegistrations: Create'ComponentsTaxRegistrations, ?taxSettings: Create'ComponentsTaxSettings) =
             {
                 AccountManagement = accountManagement
                 AccountOnboarding = accountOnboarding
@@ -874,6 +923,7 @@ module AccountSessions =
                 NotificationBanner = notificationBanner
                 PaymentDetails = paymentDetails
                 PaymentDisputes = paymentDisputes
+                PaymentMethodSettings = paymentMethodSettings
                 Payments = payments
                 PayoutDetails = payoutDetails
                 PayoutReconciliationReport = payoutReconciliationReport
@@ -972,7 +1022,7 @@ module BillingAlerts =
             /// The filters allows limiting the scope of this usage alert. You can only specify up to one filter at this time.
             [<Config.Form>]
             Filters: Create'UsageThresholdFilters list option
-            /// Defines the threshold value that triggers the alert.
+            /// Defines the threshold value that triggers the alert. The value must be greater than 0.
             [<Config.Form>]
             Gte: int option
             /// The [Billing Meter](/api/billing/meter) ID whose usage is monitored.
@@ -1505,6 +1555,133 @@ module BillingCreditGrantsVoid =
         $"/v1/billing/credit_grants/{options.Id}/void"
         |> RestApi.postAsync<_, BillingCreditGrant> settings (Map.empty) options
 
+module BillingFeedbackOptions =
+
+    type ListOptions =
+        {
+            /// A cursor for use in pagination. `ending_before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list.
+            [<Config.Query>]
+            EndingBefore: string option
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Query>]
+            Expand: string list option
+            /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            [<Config.Query>]
+            Limit: int option
+            /// A cursor for use in pagination. `starting_after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list.
+            [<Config.Query>]
+            StartingAfter: string option
+            /// Filter results to only include feedback options with the given status.
+            [<Config.Query>]
+            Status: string option
+        }
+
+    type ListOptions with
+        static member New(?endingBefore: string, ?expand: string list, ?limit: int, ?startingAfter: string, ?status: string) =
+            {
+                EndingBefore = endingBefore
+                Expand = expand
+                Limit = limit
+                StartingAfter = startingAfter
+                Status = status
+            }
+
+    type CreateOptions =
+        {
+            [<Config.Form>]
+            Description: string
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Form>]
+            Expand: string list option
+        }
+
+    type CreateOptions with
+        static member New(description: string, ?expand: string list) =
+            {
+                Description = description
+                Expand = expand
+            }
+
+    type RetrieveOptions =
+        {
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Query>]
+            Expand: string list option
+            [<Config.Path>]
+            Id: string
+        }
+
+    type RetrieveOptions with
+        static member New(id: string, ?expand: string list) =
+            {
+                Id = id
+                Expand = expand
+            }
+
+    type UpdateOptions =
+        {
+            [<Config.Path>]
+            Id: string
+            [<Config.Form>]
+            Description: string option
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Form>]
+            Expand: string list option
+        }
+
+    type UpdateOptions with
+        static member New(id: string, ?description: string, ?expand: string list) =
+            {
+                Id = id
+                Description = description
+                Expand = expand
+            }
+
+    ///<p>An API method for listing the feedback options model</p>
+    let List settings (options: ListOptions) =
+        let qs = [("ending_before", options.EndingBefore |> box); ("expand", options.Expand |> box); ("limit", options.Limit |> box); ("starting_after", options.StartingAfter |> box); ("status", options.Status |> box)] |> Map.ofList
+        $"/v1/billing/feedback_options"
+        |> RestApi.getAsync<StripeList<BillingFeedbackOption>> settings qs
+
+    ///<p>Creates a new feedback option.</p>
+    let Create settings (options: CreateOptions) =
+        $"/v1/billing/feedback_options"
+        |> RestApi.postAsync<_, BillingFeedbackOption> settings (Map.empty) options
+
+    ///<p>Retrieves a feedback options object given an ID.</p>
+    let Retrieve settings (options: RetrieveOptions) =
+        let qs = [("expand", options.Expand |> box)] |> Map.ofList
+        $"/v1/billing/feedback_options/{options.Id}"
+        |> RestApi.getAsync<BillingFeedbackOption> settings qs
+
+    ///<p>Updates the description of an existing feedback option.</p>
+    let Update settings (options: UpdateOptions) =
+        $"/v1/billing/feedback_options/{options.Id}"
+        |> RestApi.postAsync<_, BillingFeedbackOption> settings (Map.empty) options
+
+module BillingFeedbackOptionsDeactivate =
+
+    type DeactivateOptions =
+        {
+            [<Config.Path>]
+            Id: string
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Form>]
+            Expand: string list option
+        }
+
+    type DeactivateOptions with
+        static member New(id: string, ?expand: string list) =
+            {
+                Id = id
+                Expand = expand
+            }
+
+    ///<p>Deactivates a feedback option. Deactivated feedback options cannot be used in portal configurations.</p>
+    let Deactivate settings (options: DeactivateOptions) =
+        $"/v1/billing/feedback_options/{options.Id}/deactivate"
+        |> RestApi.postAsync<_, BillingFeedbackOption> settings (Map.empty) options
+
 module BillingMeterEventAdjustments =
 
     type Create'Cancel =
@@ -1869,6 +2046,19 @@ module BillingMetersReactivate =
 
 module CustomerSessions =
 
+    type Create'ComponentsActiveEntitlements =
+        {
+            /// Whether the active entitlements is enabled.
+            [<Config.Form>]
+            Enabled: bool option
+        }
+
+    type Create'ComponentsActiveEntitlements with
+        static member New(?enabled: bool) =
+            {
+                Enabled = enabled
+            }
+
     type Create'ComponentsBuyButton =
         {
             /// Whether the buy button is enabled.
@@ -1877,6 +2067,19 @@ module CustomerSessions =
         }
 
     type Create'ComponentsBuyButton with
+        static member New(?enabled: bool) =
+            {
+                Enabled = enabled
+            }
+
+    type Create'ComponentsCustomerPortal =
+        {
+            /// Whether the customer portal is enabled.
+            [<Config.Form>]
+            Enabled: bool option
+        }
+
+    type Create'ComponentsCustomerPortal with
         static member New(?enabled: bool) =
             {
                 Enabled = enabled
@@ -2093,9 +2296,15 @@ module CustomerSessions =
 
     type Create'Components =
         {
+            /// Configuration for active entitlements.
+            [<Config.Form>]
+            ActiveEntitlements: Create'ComponentsActiveEntitlements option
             /// Configuration for buy button.
             [<Config.Form>]
             BuyButton: Create'ComponentsBuyButton option
+            /// Configuration for customer portal.
+            [<Config.Form>]
+            CustomerPortal: Create'ComponentsCustomerPortal option
             /// Configuration for the customer sheet.
             [<Config.Form>]
             CustomerSheet: Create'ComponentsCustomerSheet option
@@ -2111,9 +2320,11 @@ module CustomerSessions =
         }
 
     type Create'Components with
-        static member New(?buyButton: Create'ComponentsBuyButton, ?customerSheet: Create'ComponentsCustomerSheet, ?mobilePaymentElement: Create'ComponentsMobilePaymentElement, ?paymentElement: Create'ComponentsPaymentElement, ?pricingTable: Create'ComponentsPricingTable) =
+        static member New(?activeEntitlements: Create'ComponentsActiveEntitlements, ?buyButton: Create'ComponentsBuyButton, ?customerPortal: Create'ComponentsCustomerPortal, ?customerSheet: Create'ComponentsCustomerSheet, ?mobilePaymentElement: Create'ComponentsMobilePaymentElement, ?paymentElement: Create'ComponentsPaymentElement, ?pricingTable: Create'ComponentsPricingTable) =
             {
+                ActiveEntitlements = activeEntitlements
                 BuyButton = buyButton
+                CustomerPortal = customerPortal
                 CustomerSheet = customerSheet
                 MobilePaymentElement = mobilePaymentElement
                 PaymentElement = paymentElement
@@ -2404,6 +2615,11 @@ module FinancialConnectionsSessions =
         | Mortgage
         | Savings
 
+    type Create'FiltersRequirePaymentMethodSupport =
+        | All
+        | AtLeastOne
+        | [<JsonPropertyName("none")>] None'
+
     type Create'Filters =
         {
             /// Restricts the Session to subcategories of accounts that can be linked. Valid subcategories are: `checking`, `savings`, `mortgage`, `line_of_credit`, `credit_card`.
@@ -2412,13 +2628,47 @@ module FinancialConnectionsSessions =
             /// List of countries from which to collect accounts.
             [<Config.Form>]
             Countries: string list option
+            /// Whether the session should require payment method support and successful account number retrieval before completion.
+            [<Config.Form>]
+            RequirePaymentMethodSupport: Create'FiltersRequirePaymentMethodSupport option
         }
 
     type Create'Filters with
-        static member New(?accountSubcategories: Create'FiltersAccountSubcategories list, ?countries: string list) =
+        static member New(?accountSubcategories: Create'FiltersAccountSubcategories list, ?countries: string list, ?requirePaymentMethodSupport: Create'FiltersRequirePaymentMethodSupport) =
             {
                 AccountSubcategories = accountSubcategories
                 Countries = countries
+                RequirePaymentMethodSupport = requirePaymentMethodSupport
+            }
+
+    type Create'Limits =
+        {
+            /// The number of accounts that can be linked in this Session. Pass an empty value to allow any number of accounts.
+            [<Config.Form>]
+            Accounts: Choice<int,string> option
+        }
+
+    type Create'Limits with
+        static member New(?accounts: Choice<int,string>) =
+            {
+                Accounts = accounts
+            }
+
+    type Create'ManualEntryMode =
+        | Automatic
+        | Disabled
+
+    type Create'ManualEntry =
+        {
+            /// How manual entry should be handled.
+            [<Config.Form>]
+            Mode: Create'ManualEntryMode option
+        }
+
+    type Create'ManualEntry with
+        static member New(?mode: Create'ManualEntryMode) =
+            {
+                Mode = mode
             }
 
     type Create'Permissions =
@@ -2443,6 +2693,12 @@ module FinancialConnectionsSessions =
             /// Filters to restrict the kinds of accounts to collect.
             [<Config.Form>]
             Filters: Create'Filters option
+            /// Settings for configuring Session-specific limits.
+            [<Config.Form>]
+            Limits: Create'Limits option
+            /// Customize manual entry behavior
+            [<Config.Form>]
+            ManualEntry: Create'ManualEntry option
             /// List of data features that you would like to request access to.
             /// Possible values are `balances`, `transactions`, `ownership`, and `payment_method`.
             [<Config.Form>]
@@ -2456,12 +2712,14 @@ module FinancialConnectionsSessions =
         }
 
     type CreateOptions with
-        static member New(accountHolder: Create'AccountHolder, permissions: Create'Permissions list, ?expand: string list, ?filters: Create'Filters, ?prefetch: Create'Prefetch list, ?returnUrl: string) =
+        static member New(accountHolder: Create'AccountHolder, permissions: Create'Permissions list, ?expand: string list, ?filters: Create'Filters, ?limits: Create'Limits, ?manualEntry: Create'ManualEntry, ?prefetch: Create'Prefetch list, ?returnUrl: string) =
             {
                 AccountHolder = accountHolder
                 Permissions = permissions
                 Expand = expand
                 Filters = filters
+                Limits = limits
+                ManualEntry = manualEntry
                 Prefetch = prefetch
                 ReturnUrl = returnUrl
             }
@@ -7659,7 +7917,7 @@ module SubscriptionSchedules =
             /// Only return subscription schedules that were created during the given date interval.
             [<Config.Query>]
             Created: int option
-            /// Only return subscription schedules for the given customer.
+            /// Only return subscription schedules for the given customer. The response will not include subscription schedules for customers with a test clock attached if this parameter is not set.
             [<Config.Query>]
             Customer: string option
             /// Only return subscription schedules for the given account.
@@ -7802,6 +8060,23 @@ module SubscriptionSchedules =
         | ChargeAutomatically
         | SendInvoice
 
+    type Create'DefaultSettingsInvoiceSettingsCustomFields =
+        {
+            /// The name of the custom field. This may be up to 40 characters.
+            [<Config.Form>]
+            Name: string option
+            /// The value of the custom field. This may be up to 140 characters.
+            [<Config.Form>]
+            Value: string option
+        }
+
+    type Create'DefaultSettingsInvoiceSettingsCustomFields with
+        static member New(?name: string, ?value: string) =
+            {
+                Name = name
+                Value = value
+            }
+
     type Create'DefaultSettingsInvoiceSettingsIssuerType =
         | Account
         | Self
@@ -7828,19 +8103,28 @@ module SubscriptionSchedules =
             /// The account tax IDs associated with the subscription schedule. Will be set on invoices generated by the subscription schedule.
             [<Config.Form>]
             AccountTaxIds: Choice<string list,string> option
+            [<Config.Form>]
+            CustomFields: Choice<Create'DefaultSettingsInvoiceSettingsCustomFields list,string> option
             /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `collection_method=charge_automatically`.
             [<Config.Form>]
             DaysUntilDue: int option
+            [<Config.Form>]
+            Description: Choice<string,string> option
+            [<Config.Form>]
+            Footer: Choice<string,string> option
             /// The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
             [<Config.Form>]
             Issuer: Create'DefaultSettingsInvoiceSettingsIssuer option
         }
 
     type Create'DefaultSettingsInvoiceSettings with
-        static member New(?accountTaxIds: Choice<string list,string>, ?daysUntilDue: int, ?issuer: Create'DefaultSettingsInvoiceSettingsIssuer) =
+        static member New(?accountTaxIds: Choice<string list,string>, ?customFields: Choice<Create'DefaultSettingsInvoiceSettingsCustomFields list,string>, ?daysUntilDue: int, ?description: Choice<string,string>, ?footer: Choice<string,string>, ?issuer: Create'DefaultSettingsInvoiceSettingsIssuer) =
             {
                 AccountTaxIds = accountTaxIds
+                CustomFields = customFields
                 DaysUntilDue = daysUntilDue
+                Description = description
+                Footer = footer
                 Issuer = issuer
             }
 
@@ -8180,6 +8464,23 @@ module SubscriptionSchedules =
                 IntervalCount = intervalCount
             }
 
+    type Create'PhasesInvoiceSettingsCustomFields =
+        {
+            /// The name of the custom field. This may be up to 40 characters.
+            [<Config.Form>]
+            Name: string option
+            /// The value of the custom field. This may be up to 140 characters.
+            [<Config.Form>]
+            Value: string option
+        }
+
+    type Create'PhasesInvoiceSettingsCustomFields with
+        static member New(?name: string, ?value: string) =
+            {
+                Name = name
+                Value = value
+            }
+
     type Create'PhasesInvoiceSettingsIssuerType =
         | Account
         | Self
@@ -8206,19 +8507,31 @@ module SubscriptionSchedules =
             /// The account tax IDs associated with this phase of the subscription schedule. Will be set on invoices generated by this phase of the subscription schedule.
             [<Config.Form>]
             AccountTaxIds: Choice<string list,string> option
-            /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+            /// A list of up to 4 custom fields to be displayed on the invoice.
+            [<Config.Form>]
+            CustomFields: Choice<Create'PhasesInvoiceSettingsCustomFields list,string> option
+            /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `collection_method=charge_automatically`.
             [<Config.Form>]
             DaysUntilDue: int option
+            /// An arbitrary string attached to the object. Often useful for displaying to users.
+            [<Config.Form>]
+            Description: Choice<string,string> option
+            /// Footer to be displayed on the invoice.
+            [<Config.Form>]
+            Footer: Choice<string,string> option
             /// The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
             [<Config.Form>]
             Issuer: Create'PhasesInvoiceSettingsIssuer option
         }
 
     type Create'PhasesInvoiceSettings with
-        static member New(?accountTaxIds: Choice<string list,string>, ?daysUntilDue: int, ?issuer: Create'PhasesInvoiceSettingsIssuer) =
+        static member New(?accountTaxIds: Choice<string list,string>, ?customFields: Choice<Create'PhasesInvoiceSettingsCustomFields list,string>, ?daysUntilDue: int, ?description: Choice<string,string>, ?footer: Choice<string,string>, ?issuer: Create'PhasesInvoiceSettingsIssuer) =
             {
                 AccountTaxIds = accountTaxIds
+                CustomFields = customFields
                 DaysUntilDue = daysUntilDue
+                Description = description
+                Footer = footer
                 Issuer = issuer
             }
 
@@ -8504,7 +8817,7 @@ module SubscriptionSchedules =
             /// List representing phases of the subscription schedule. Each phase can be customized to have different durations, plans, and coupons. If there are multiple phases, the `end_date` of one phase will always equal the `start_date` of the next phase.
             [<Config.Form>]
             Phases: Create'Phases list option
-            /// When the subscription schedule starts. We recommend using `now` so that it starts the subscription immediately. You can also use a Unix timestamp to backdate the subscription so that it starts on a past date, or set a future date for the subscription to start on.
+            /// When the subscription schedule starts. We recommend using `now` so that it starts the subscription immediately, and to avoid unexpected behavior due to request delays or clock skew resulting in a slightly backdated or postdated start. You can also use a Unix timestamp to backdate the subscription so that it starts on a past date, or set a future date for the subscription to start on.
             [<Config.Form>]
             StartDate: Choice<DateTime,Create'StartDate> option
         }
@@ -8603,6 +8916,23 @@ module SubscriptionSchedules =
         | ChargeAutomatically
         | SendInvoice
 
+    type Update'DefaultSettingsInvoiceSettingsCustomFields =
+        {
+            /// The name of the custom field. This may be up to 40 characters.
+            [<Config.Form>]
+            Name: string option
+            /// The value of the custom field. This may be up to 140 characters.
+            [<Config.Form>]
+            Value: string option
+        }
+
+    type Update'DefaultSettingsInvoiceSettingsCustomFields with
+        static member New(?name: string, ?value: string) =
+            {
+                Name = name
+                Value = value
+            }
+
     type Update'DefaultSettingsInvoiceSettingsIssuerType =
         | Account
         | Self
@@ -8629,19 +8959,28 @@ module SubscriptionSchedules =
             /// The account tax IDs associated with the subscription schedule. Will be set on invoices generated by the subscription schedule.
             [<Config.Form>]
             AccountTaxIds: Choice<string list,string> option
+            [<Config.Form>]
+            CustomFields: Choice<Update'DefaultSettingsInvoiceSettingsCustomFields list,string> option
             /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `collection_method=charge_automatically`.
             [<Config.Form>]
             DaysUntilDue: int option
+            [<Config.Form>]
+            Description: Choice<string,string> option
+            [<Config.Form>]
+            Footer: Choice<string,string> option
             /// The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
             [<Config.Form>]
             Issuer: Update'DefaultSettingsInvoiceSettingsIssuer option
         }
 
     type Update'DefaultSettingsInvoiceSettings with
-        static member New(?accountTaxIds: Choice<string list,string>, ?daysUntilDue: int, ?issuer: Update'DefaultSettingsInvoiceSettingsIssuer) =
+        static member New(?accountTaxIds: Choice<string list,string>, ?customFields: Choice<Update'DefaultSettingsInvoiceSettingsCustomFields list,string>, ?daysUntilDue: int, ?description: Choice<string,string>, ?footer: Choice<string,string>, ?issuer: Update'DefaultSettingsInvoiceSettingsIssuer) =
             {
                 AccountTaxIds = accountTaxIds
+                CustomFields = customFields
                 DaysUntilDue = daysUntilDue
+                Description = description
+                Footer = footer
                 Issuer = issuer
             }
 
@@ -8983,6 +9322,23 @@ module SubscriptionSchedules =
 
     type Update'PhasesEndDate = | Now
 
+    type Update'PhasesInvoiceSettingsCustomFields =
+        {
+            /// The name of the custom field. This may be up to 40 characters.
+            [<Config.Form>]
+            Name: string option
+            /// The value of the custom field. This may be up to 140 characters.
+            [<Config.Form>]
+            Value: string option
+        }
+
+    type Update'PhasesInvoiceSettingsCustomFields with
+        static member New(?name: string, ?value: string) =
+            {
+                Name = name
+                Value = value
+            }
+
     type Update'PhasesInvoiceSettingsIssuerType =
         | Account
         | Self
@@ -9009,19 +9365,31 @@ module SubscriptionSchedules =
             /// The account tax IDs associated with this phase of the subscription schedule. Will be set on invoices generated by this phase of the subscription schedule.
             [<Config.Form>]
             AccountTaxIds: Choice<string list,string> option
-            /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+            /// A list of up to 4 custom fields to be displayed on the invoice.
+            [<Config.Form>]
+            CustomFields: Choice<Update'PhasesInvoiceSettingsCustomFields list,string> option
+            /// Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `collection_method=charge_automatically`.
             [<Config.Form>]
             DaysUntilDue: int option
+            /// An arbitrary string attached to the object. Often useful for displaying to users.
+            [<Config.Form>]
+            Description: Choice<string,string> option
+            /// Footer to be displayed on the invoice.
+            [<Config.Form>]
+            Footer: Choice<string,string> option
             /// The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
             [<Config.Form>]
             Issuer: Update'PhasesInvoiceSettingsIssuer option
         }
 
     type Update'PhasesInvoiceSettings with
-        static member New(?accountTaxIds: Choice<string list,string>, ?daysUntilDue: int, ?issuer: Update'PhasesInvoiceSettingsIssuer) =
+        static member New(?accountTaxIds: Choice<string list,string>, ?customFields: Choice<Update'PhasesInvoiceSettingsCustomFields list,string>, ?daysUntilDue: int, ?description: Choice<string,string>, ?footer: Choice<string,string>, ?issuer: Update'PhasesInvoiceSettingsIssuer) =
             {
                 AccountTaxIds = accountTaxIds
+                CustomFields = customFields
                 DaysUntilDue = daysUntilDue
+                Description = description
+                Footer = footer
                 Issuer = issuer
             }
 
@@ -9243,7 +9611,7 @@ module SubscriptionSchedules =
             /// Controls whether the subscription schedule should create [prorations](https://docs.stripe.com/billing/subscriptions/prorations) when transitioning to this phase if there is a difference in billing configuration. It's different from the request-level [proration_behavior](https://docs.stripe.com/api/subscription_schedules/update#update_subscription_schedule-proration_behavior) parameter which controls what happens if the update request affects the billing configuration (item price, quantity, etc.) of the current phase.
             [<Config.Form>]
             ProrationBehavior: Update'PhasesProrationBehavior option
-            /// The date at which this phase of the subscription schedule starts or `now`. Must be set on the first phase.
+            /// The date at which this phase of the subscription schedule starts or `now`. Must be set on the first phase. Prefer to specify `now` over an explicit timestamp when appropriate to avoid unexpected behavior due to request delays or clock skew resulting in the phase being slightly backdated or postdated.
             [<Config.Form>]
             StartDate: Choice<DateTime,Update'PhasesStartDate> option
             /// The data with which to automatically create a Transfer for each of the associated subscription's invoices.
@@ -9252,7 +9620,7 @@ module SubscriptionSchedules =
             /// If set to true the entire phase is counted as a trial and the customer will not be charged for any fees.
             [<Config.Form>]
             Trial: bool option
-            /// Sets the phase to trialing from the start date to this date. Must be before the phase end date, can not be combined with `trial`
+            /// Sets the phase to trialing from the start date to this date. Must be within the phase. When combined with `trial=true`, it must match the phase end date.
             [<Config.Form>]
             TrialEnd: Choice<DateTime,Update'PhasesTrialEnd> option
         }
