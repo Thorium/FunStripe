@@ -8,7 +8,7 @@ open Stripe.TaxId
 open Stripe.TaxRate
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module TaxAssociationsFind =
 
     type FindOptions =
@@ -127,6 +127,7 @@ module TaxCalculations =
         | HkBr
         | HrOib
         | HuTin
+        | IcNif
         | IdNpwp
         | IlVat
         | InGst
@@ -193,7 +194,7 @@ module TaxCalculations =
 
     type Create'CustomerDetailsTaxIds =
         {
-            /// Type of the tax ID, one of `ad_nrt`, `ae_trn`, `al_tin`, `am_tin`, `ao_tin`, `ar_cuit`, `au_abn`, `au_arn`, `aw_tin`, `az_tin`, `ba_tin`, `bb_tin`, `bd_bin`, `bf_ifu`, `bg_uic`, `bh_vat`, `bj_ifu`, `bo_tin`, `br_cnpj`, `br_cpf`, `bs_tin`, `by_tin`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `cd_nif`, `ch_uid`, `ch_vat`, `cl_tin`, `cm_niu`, `cn_tin`, `co_nit`, `cr_tin`, `cv_nif`, `de_stn`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `et_tin`, `eu_oss_vat`, `eu_vat`, `fo_vat`, `gb_vat`, `ge_vat`, `gi_tin`, `gn_nif`, `hk_br`, `hr_oib`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `it_cf`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kg_tin`, `kh_tin`, `kr_brn`, `kz_bin`, `la_tin`, `li_uid`, `li_vat`, `lk_vat`, `ma_vat`, `md_vat`, `me_pib`, `mk_vat`, `mr_nif`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `np_pan`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `pl_nip`, `py_ruc`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sn_ninea`, `sr_fin`, `sv_nit`, `th_vat`, `tj_tin`, `tr_tin`, `tw_vat`, `tz_vat`, `ua_vat`, `ug_tin`, `us_ein`, `uy_ruc`, `uz_tin`, `uz_vat`, `ve_rif`, `vn_tin`, `za_vat`, `zm_tin`, or `zw_tin`
+            /// Type of the tax ID, one of `ad_nrt`, `ae_trn`, `al_tin`, `am_tin`, `ao_tin`, `ar_cuit`, `au_abn`, `au_arn`, `aw_tin`, `az_tin`, `ba_tin`, `bb_tin`, `bd_bin`, `bf_ifu`, `bg_uic`, `bh_vat`, `bj_ifu`, `bo_tin`, `br_cnpj`, `br_cpf`, `bs_tin`, `by_tin`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `cd_nif`, `ch_uid`, `ch_vat`, `cl_tin`, `cm_niu`, `cn_tin`, `co_nit`, `cr_tin`, `cv_nif`, `de_stn`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `et_tin`, `eu_oss_vat`, `eu_vat`, `fo_vat`, `gb_vat`, `ge_vat`, `gi_tin`, `gn_nif`, `hk_br`, `hr_oib`, `hu_tin`, `ic_nif`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `it_cf`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kg_tin`, `kh_tin`, `kr_brn`, `kz_bin`, `la_tin`, `li_uid`, `li_vat`, `lk_vat`, `ma_vat`, `md_vat`, `me_pib`, `mk_vat`, `mr_nif`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `np_pan`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `pl_nip`, `py_ruc`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sn_ninea`, `sr_fin`, `sv_nit`, `th_vat`, `tj_tin`, `tr_tin`, `tw_vat`, `tz_vat`, `ua_vat`, `ug_tin`, `us_ein`, `uy_ruc`, `uz_tin`, `uz_vat`, `ve_rif`, `vn_tin`, `za_vat`, `zm_tin`, or `zw_tin`
             [<Config.Form>]
             Type: Create'CustomerDetailsTaxIdsType option
             /// Value of the tax ID.
@@ -255,6 +256,9 @@ module TaxCalculations =
             /// Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
             [<Config.Form>]
             Metadata: Map<string, string> option
+            /// A tax location ID. Depending on the [tax code](/tax/tax-for-tickets/reference/tax-location-performance), this is required, optional, or not supported.
+            [<Config.Form>]
+            PerformanceLocation: string option
             /// If provided, the product's `tax_code` will be used as the line item's `tax_code`.
             [<Config.Form>]
             Product: string option
@@ -273,10 +277,11 @@ module TaxCalculations =
         }
 
     type Create'LineItems with
-        static member New(?amount: int, ?metadata: Map<string, string>, ?product: string, ?quantity: int, ?reference: string, ?taxBehavior: Create'LineItemsTaxBehavior, ?taxCode: string) =
+        static member New(?amount: int, ?metadata: Map<string, string>, ?performanceLocation: string, ?product: string, ?quantity: int, ?reference: string, ?taxBehavior: Create'LineItemsTaxBehavior, ?taxCode: string) =
             {
                 Amount = amount
                 Metadata = metadata
+                PerformanceLocation = performanceLocation
                 Product = product
                 Quantity = quantity
                 Reference = reference
@@ -373,7 +378,7 @@ module TaxCalculations =
             /// Specifies which fields in the response should be expanded.
             [<Config.Form>]
             Expand: string list option
-            /// A list of items the customer is purchasing.
+            /// A list of items the customer is purchasing. You can pass up to 100 line items, or 1,000 if your account has an increased limit.
             [<Config.Form>]
             LineItems: Create'LineItems list
             /// Details about the address from which the goods are being shipped.
@@ -382,7 +387,7 @@ module TaxCalculations =
             /// Shipping cost details to be used for the calculation.
             [<Config.Form>]
             ShippingCost: Create'ShippingCost option
-            /// Timestamp of date at which the tax rules and rates in effect applies for the calculation. Measured in seconds since the Unix epoch. Can be up to 48 hours in the past, and up to 48 hours in the future.
+            /// The calculation uses the tax rules and rates that are in effect at this timestamp. You can use a date up to 31 days in the past or up to 31 days in the future. If you use a future date, Stripe doesn't guarantee that the expected tax rules and rate being used match the actual rules and rate that will be in effect on that date. We deploy tax changes before their effective date, but not within a fixed window.
             [<Config.Form>]
             TaxDate: int option
         }
@@ -462,6 +467,132 @@ module TaxCalculationsLineItems =
         let qs = [("ending_before", options.EndingBefore |> box); ("expand", options.Expand |> box); ("limit", options.Limit |> box); ("starting_after", options.StartingAfter |> box)] |> Map.ofList
         $"/v1/tax/calculations/{options.Calculation}/line_items"
         |> RestApi.getAsync<StripeList<TaxCalculationLineItem>> settings qs
+
+module TaxLocations =
+
+    type ListOptions =
+        {
+            /// A cursor for use in pagination. `ending_before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list.
+            [<Config.Query>]
+            EndingBefore: string option
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Query>]
+            Expand: string list option
+            /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            [<Config.Query>]
+            Limit: int option
+            /// A cursor for use in pagination. `starting_after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list.
+            [<Config.Query>]
+            StartingAfter: string option
+            /// Type of the tax location. Currently the only option is `performance`.
+            [<Config.Query>]
+            Type: string
+        }
+
+    type ListOptions with
+        static member New(type': string, ?endingBefore: string, ?expand: string list, ?limit: int, ?startingAfter: string) =
+            {
+                Type = type'
+                EndingBefore = endingBefore
+                Expand = expand
+                Limit = limit
+                StartingAfter = startingAfter
+            }
+
+    type Create'Address =
+        {
+            /// City, district, suburb, town, or village.
+            [<Config.Form>]
+            City: Choice<string,string> option
+            /// Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+            [<Config.Form>]
+            Country: IsoTypes.IsoCountryCode option
+            /// Address line 1, such as the street, PO Box, or company name.
+            [<Config.Form>]
+            Line1: Choice<string,string> option
+            /// Address line 2, such as the apartment, suite, unit, or building.
+            [<Config.Form>]
+            Line2: Choice<string,string> option
+            /// ZIP or postal code.
+            [<Config.Form>]
+            PostalCode: Choice<string,string> option
+            /// State/province as an [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) subdivision code, without country prefix, such as "NY" or "TX".
+            [<Config.Form>]
+            State: Choice<string,string> option
+        }
+
+    type Create'Address with
+        static member New(?city: Choice<string,string>, ?country: IsoTypes.IsoCountryCode, ?line1: Choice<string,string>, ?line2: Choice<string,string>, ?postalCode: Choice<string,string>, ?state: Choice<string,string>) =
+            {
+                City = city
+                Country = country
+                Line1 = line1
+                Line2 = line2
+                PostalCode = postalCode
+                State = state
+            }
+
+    type Create'Type = | Performance
+
+    type CreateOptions =
+        {
+            /// The physical address of the tax location.
+            [<Config.Form>]
+            Address: Create'Address
+            /// Details to identify the tax location by its venue, types of events held, or available services, such as "A spacious auditorium suitable for large concerts and events.".
+            [<Config.Form>]
+            Description: string option
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Form>]
+            Expand: string list option
+            /// The type of tax location. The only supported value is "performance".
+            [<Config.Form>]
+            Type: Create'Type
+        }
+
+    type CreateOptions with
+        static member New(address: Create'Address, type': Create'Type, ?description: string, ?expand: string list) =
+            {
+                Address = address
+                Type = type'
+                Description = description
+                Expand = expand
+            }
+
+    type RetrieveOptions =
+        {
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Query>]
+            Expand: string list option
+            [<Config.Path>]
+            Location: string
+        }
+
+    type RetrieveOptions with
+        static member New(location: string, ?expand: string list) =
+            {
+                Location = location
+                Expand = expand
+            }
+
+    ///<p>Retrieve a list of all tax locations. Tax locations can represent the venues for services, tickets, or other product types.</p>
+    ///<p>The response includes detailed information for each tax location, such as its address, type, and description.</p>
+    ///<p>You can paginate through the list by using the <code>limit</code> parameter to control the number of results returned in each request.</p>
+    let List settings (options: ListOptions) =
+        let qs = [("ending_before", options.EndingBefore |> box); ("expand", options.Expand |> box); ("limit", options.Limit |> box); ("starting_after", options.StartingAfter |> box); ("type", options.Type |> box)] |> Map.ofList
+        $"/v1/tax/locations"
+        |> RestApi.getAsync<StripeList<TaxLocation>> settings qs
+
+    ///<p>Create a tax location to use in calculating taxes for a service, ticket, or other type of product. The resulting object contains the ID, address, type, and description of the tax location.</p>
+    let Create settings (options: CreateOptions) =
+        $"/v1/tax/locations"
+        |> RestApi.postAsync<_, TaxLocation> settings (Map.empty) options
+
+    ///<p>Fetch the details of a specific tax location using its unique identifier. Use a tax location to calculate taxes based on the location of the end product, such as a performance, instead of the customer address. For more details, check the <a href="https://docs.stripe.com/tax/tax-for-tickets/integration-guide">integration guide</a>.</p>
+    let Retrieve settings (options: RetrieveOptions) =
+        let qs = [("expand", options.Expand |> box)] |> Map.ofList
+        $"/v1/tax/locations/{options.Location}"
+        |> RestApi.getAsync<TaxLocation> settings qs
 
 module TaxRegistrations =
 
@@ -1521,7 +1652,7 @@ module TaxRegistrations =
             /// Options for the standard registration.
             [<Config.Form>]
             Standard: Create'CountryOptionsEsStandard option
-            /// Type of registration to be created in an EU country.
+            /// Type of registration to be created in ES.
             [<Config.Form>]
             Type: Create'CountryOptionsEsType option
         }
@@ -3195,6 +3326,71 @@ module TaxRegistrations =
                 Type = type'
             }
 
+    type Create'CountryOptionsUsAdmissionsTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=admissions_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsAdmissionsTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsAttendanceTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=attendance_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsAttendanceTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsEntertainmentTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=entertainment_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsEntertainmentTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsGrossReceiptsTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=gross_receipts_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsGrossReceiptsTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsHospitalityTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=hospitality_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsHospitalityTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
     type Create'CountryOptionsUsLocalAmusementTax =
         {
             /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=amusement_tax#registration-types).
@@ -3216,6 +3412,58 @@ module TaxRegistrations =
         }
 
     type Create'CountryOptionsUsLocalLeaseTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsLuxuryTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=luxury_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsLuxuryTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsMassTransitParkingTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=mass_transit_parking_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsMassTransitParkingTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsParkingTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=parking_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsParkingTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
+    type Create'CountryOptionsUsResortTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=resort_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsResortTax with
         static member New(?jurisdiction: string) =
             {
                 Jurisdiction = jurisdiction
@@ -3256,39 +3504,102 @@ module TaxRegistrations =
                 Elections = elections
             }
 
+    type Create'CountryOptionsUsTourismTax =
+        {
+            /// A jurisdiction code representing the [local jurisdiction](/tax/registering?type=tourism_tax#registration-types).
+            [<Config.Form>]
+            Jurisdiction: string option
+        }
+
+    type Create'CountryOptionsUsTourismTax with
+        static member New(?jurisdiction: string) =
+            {
+                Jurisdiction = jurisdiction
+            }
+
     type Create'CountryOptionsUsType =
+        | AdmissionsTax
+        | AttendanceTax
+        | EntertainmentTax
+        | GrossReceiptsTax
+        | HospitalityTax
         | LocalAmusementTax
         | LocalLeaseTax
+        | LuxuryTax
+        | MassTransitParkingTax
+        | ParkingTax
+        | ResortTax
         | StateCommunicationsTax
         | StateRetailDeliveryFee
         | StateSalesTax
+        | TourismTax
 
     type Create'CountryOptionsUs =
         {
+            /// Options for the admission tax registration.
+            [<Config.Form>]
+            AdmissionsTax: Create'CountryOptionsUsAdmissionsTax option
+            /// Options for the attendance tax registration.
+            [<Config.Form>]
+            AttendanceTax: Create'CountryOptionsUsAttendanceTax option
+            /// Options for the entertainment tax registration.
+            [<Config.Form>]
+            EntertainmentTax: Create'CountryOptionsUsEntertainmentTax option
+            /// Options for the gross receipts tax registration.
+            [<Config.Form>]
+            GrossReceiptsTax: Create'CountryOptionsUsGrossReceiptsTax option
+            /// Options for the hospitality tax registration.
+            [<Config.Form>]
+            HospitalityTax: Create'CountryOptionsUsHospitalityTax option
             /// Options for the local amusement tax registration.
             [<Config.Form>]
             LocalAmusementTax: Create'CountryOptionsUsLocalAmusementTax option
             /// Options for the local lease tax registration.
             [<Config.Form>]
             LocalLeaseTax: Create'CountryOptionsUsLocalLeaseTax option
+            /// Options for the luxury tax registration.
+            [<Config.Form>]
+            LuxuryTax: Create'CountryOptionsUsLuxuryTax option
+            /// Options for the mass transit parking tax registration.
+            [<Config.Form>]
+            MassTransitParkingTax: Create'CountryOptionsUsMassTransitParkingTax option
+            /// Options for the parking tax registration.
+            [<Config.Form>]
+            ParkingTax: Create'CountryOptionsUsParkingTax option
+            /// Options for the resort tax registration.
+            [<Config.Form>]
+            ResortTax: Create'CountryOptionsUsResortTax option
             /// Two-letter US state code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
             [<Config.Form>]
             State: string option
             /// Options for the state sales tax registration.
             [<Config.Form>]
             StateSalesTax: Create'CountryOptionsUsStateSalesTax option
+            /// Options for the tourism tax registration.
+            [<Config.Form>]
+            TourismTax: Create'CountryOptionsUsTourismTax option
             /// Type of registration to be created in the US.
             [<Config.Form>]
             Type: Create'CountryOptionsUsType option
         }
 
     type Create'CountryOptionsUs with
-        static member New(?localAmusementTax: Create'CountryOptionsUsLocalAmusementTax, ?localLeaseTax: Create'CountryOptionsUsLocalLeaseTax, ?state: string, ?stateSalesTax: Create'CountryOptionsUsStateSalesTax, ?type': Create'CountryOptionsUsType) =
+        static member New(?admissionsTax: Create'CountryOptionsUsAdmissionsTax, ?attendanceTax: Create'CountryOptionsUsAttendanceTax, ?entertainmentTax: Create'CountryOptionsUsEntertainmentTax, ?grossReceiptsTax: Create'CountryOptionsUsGrossReceiptsTax, ?hospitalityTax: Create'CountryOptionsUsHospitalityTax, ?localAmusementTax: Create'CountryOptionsUsLocalAmusementTax, ?localLeaseTax: Create'CountryOptionsUsLocalLeaseTax, ?luxuryTax: Create'CountryOptionsUsLuxuryTax, ?massTransitParkingTax: Create'CountryOptionsUsMassTransitParkingTax, ?parkingTax: Create'CountryOptionsUsParkingTax, ?resortTax: Create'CountryOptionsUsResortTax, ?state: string, ?stateSalesTax: Create'CountryOptionsUsStateSalesTax, ?tourismTax: Create'CountryOptionsUsTourismTax, ?type': Create'CountryOptionsUsType) =
             {
+                AdmissionsTax = admissionsTax
+                AttendanceTax = attendanceTax
+                EntertainmentTax = entertainmentTax
+                GrossReceiptsTax = grossReceiptsTax
+                HospitalityTax = hospitalityTax
                 LocalAmusementTax = localAmusementTax
                 LocalLeaseTax = localLeaseTax
+                LuxuryTax = luxuryTax
+                MassTransitParkingTax = massTransitParkingTax
+                ParkingTax = parkingTax
+                ResortTax = resortTax
                 State = state
                 StateSalesTax = stateSalesTax
+                TourismTax = tourismTax
                 Type = type'
             }
 
@@ -4438,6 +4749,7 @@ module TaxIds =
         | HkBr
         | HrOib
         | HuTin
+        | IcNif
         | IdNpwp
         | IlVat
         | InGst
@@ -4510,7 +4822,7 @@ module TaxIds =
             /// The account or customer the tax ID belongs to. Defaults to `owner[type]=self`.
             [<Config.Form>]
             Owner: Create'Owner option
-            /// Type of the tax ID, one of `ad_nrt`, `ae_trn`, `al_tin`, `am_tin`, `ao_tin`, `ar_cuit`, `au_abn`, `au_arn`, `aw_tin`, `az_tin`, `ba_tin`, `bb_tin`, `bd_bin`, `bf_ifu`, `bg_uic`, `bh_vat`, `bj_ifu`, `bo_tin`, `br_cnpj`, `br_cpf`, `bs_tin`, `by_tin`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `cd_nif`, `ch_uid`, `ch_vat`, `cl_tin`, `cm_niu`, `cn_tin`, `co_nit`, `cr_tin`, `cv_nif`, `de_stn`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `et_tin`, `eu_oss_vat`, `eu_vat`, `fo_vat`, `gb_vat`, `ge_vat`, `gi_tin`, `gn_nif`, `hk_br`, `hr_oib`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `it_cf`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kg_tin`, `kh_tin`, `kr_brn`, `kz_bin`, `la_tin`, `li_uid`, `li_vat`, `lk_vat`, `ma_vat`, `md_vat`, `me_pib`, `mk_vat`, `mr_nif`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `np_pan`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `pl_nip`, `py_ruc`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sn_ninea`, `sr_fin`, `sv_nit`, `th_vat`, `tj_tin`, `tr_tin`, `tw_vat`, `tz_vat`, `ua_vat`, `ug_tin`, `us_ein`, `uy_ruc`, `uz_tin`, `uz_vat`, `ve_rif`, `vn_tin`, `za_vat`, `zm_tin`, or `zw_tin`
+            /// Type of the tax ID, one of `ad_nrt`, `ae_trn`, `al_tin`, `am_tin`, `ao_tin`, `ar_cuit`, `au_abn`, `au_arn`, `aw_tin`, `az_tin`, `ba_tin`, `bb_tin`, `bd_bin`, `bf_ifu`, `bg_uic`, `bh_vat`, `bj_ifu`, `bo_tin`, `br_cnpj`, `br_cpf`, `bs_tin`, `by_tin`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `cd_nif`, `ch_uid`, `ch_vat`, `cl_tin`, `cm_niu`, `cn_tin`, `co_nit`, `cr_tin`, `cv_nif`, `de_stn`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `et_tin`, `eu_oss_vat`, `eu_vat`, `fo_vat`, `gb_vat`, `ge_vat`, `gi_tin`, `gn_nif`, `hk_br`, `hr_oib`, `hu_tin`, `ic_nif`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `it_cf`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kg_tin`, `kh_tin`, `kr_brn`, `kz_bin`, `la_tin`, `li_uid`, `li_vat`, `lk_vat`, `ma_vat`, `md_vat`, `me_pib`, `mk_vat`, `mr_nif`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `np_pan`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `pl_nip`, `py_ruc`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sn_ninea`, `sr_fin`, `sv_nit`, `th_vat`, `tj_tin`, `tr_tin`, `tw_vat`, `tz_vat`, `ua_vat`, `ug_tin`, `us_ein`, `uy_ruc`, `uz_tin`, `uz_vat`, `ve_rif`, `vn_tin`, `za_vat`, `zm_tin`, or `zw_tin`
             [<Config.Form>]
             Type: Create'Type
             /// Value of the tax ID.
@@ -4617,17 +4929,21 @@ module TaxRates =
     type Create'TaxType =
         | AmusementTax
         | CommunicationsTax
+        | DigitalExciseTax
         | Gst
         | Hst
         | Igst
         | Jct
         | LeaseTax
+        | MassTransitParkingTax
+        | ParkingTax
         | Pst
         | Qst
         | RetailDeliveryFee
         | Rst
         | SalesTax
         | ServiceTax
+        | UtilityUsersTax
         | Vat
 
     type CreateOptions =
@@ -4702,17 +5018,21 @@ module TaxRates =
     type Update'TaxType =
         | AmusementTax
         | CommunicationsTax
+        | DigitalExciseTax
         | Gst
         | Hst
         | Igst
         | Jct
         | LeaseTax
+        | MassTransitParkingTax
+        | ParkingTax
         | Pst
         | Qst
         | RetailDeliveryFee
         | Rst
         | SalesTax
         | ServiceTax
+        | UtilityUsersTax
         | Vat
 
     type UpdateOptions =

@@ -7,10 +7,9 @@ open Stripe.Application
 open Stripe.PaymentMethod
 open Stripe.Plan
 open Stripe.Price
-open Stripe.SubscriptionItem
 open Stripe.TaxRate
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 type SchedulesPhaseAutomaticTax =
     {
         /// Whether Stripe automatically computes tax on invoices created during this phase.
@@ -241,12 +240,14 @@ type SubscriptionSchedulePhaseConfiguration =
         StartDate: DateTime
         /// The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
         TransferData: SubscriptionTransferData option
+        /// If set to true the entire phase is counted as a trial and the customer will not be charged for any fees.
+        Trial: bool option
         /// When the trial ends within the phase.
         TrialEnd: DateTime option
     }
 
 type SubscriptionSchedulePhaseConfiguration with
-    static member New(addInvoiceItems: SubscriptionScheduleAddInvoiceItem list, applicationFeePercent: decimal option, billingCycleAnchor: SubscriptionSchedulePhaseConfigurationBillingCycleAnchor option, billingThresholds: SubscriptionBillingThresholds option, collectionMethod: SubscriptionSchedulePhaseConfigurationCollectionMethod option, currency: IsoTypes.IsoCurrencyCode, defaultPaymentMethod: StripeId<Markers.PaymentMethod> option, description: string option, discounts: StackableDiscountWithDiscountSettingsAndDiscountEnd list, endDate: DateTime, invoiceSettings: InvoiceSettingSubscriptionSchedulePhaseSetting option, items: SubscriptionScheduleConfigurationItem list, metadata: Map<string, string> option, onBehalfOf: StripeId<Markers.Account> option, prorationBehavior: SubscriptionSchedulePhaseConfigurationProrationBehavior, startDate: DateTime, transferData: SubscriptionTransferData option, trialEnd: DateTime option, ?automaticTax: SchedulesPhaseAutomaticTax, ?defaultTaxRates: TaxRate list option) =
+    static member New(addInvoiceItems: SubscriptionScheduleAddInvoiceItem list, applicationFeePercent: decimal option, billingCycleAnchor: SubscriptionSchedulePhaseConfigurationBillingCycleAnchor option, billingThresholds: SubscriptionBillingThresholds option, collectionMethod: SubscriptionSchedulePhaseConfigurationCollectionMethod option, currency: IsoTypes.IsoCurrencyCode, defaultPaymentMethod: StripeId<Markers.PaymentMethod> option, description: string option, discounts: StackableDiscountWithDiscountSettingsAndDiscountEnd list, endDate: DateTime, invoiceSettings: InvoiceSettingSubscriptionSchedulePhaseSetting option, items: SubscriptionScheduleConfigurationItem list, metadata: Map<string, string> option, onBehalfOf: StripeId<Markers.Account> option, prorationBehavior: SubscriptionSchedulePhaseConfigurationProrationBehavior, startDate: DateTime, transferData: SubscriptionTransferData option, trialEnd: DateTime option, ?automaticTax: SchedulesPhaseAutomaticTax, ?defaultTaxRates: TaxRate list option, ?trial: bool) =
         {
             AddInvoiceItems = addInvoiceItems
             ApplicationFeePercent = applicationFeePercent
@@ -268,6 +269,7 @@ type SubscriptionSchedulePhaseConfiguration with
             TrialEnd = trialEnd
             AutomaticTax = automaticTax
             DefaultTaxRates = defaultTaxRates |> Option.flatten
+            Trial = trial
         }
 
 [<Struct>]
@@ -306,6 +308,8 @@ type SubscriptionSchedule =
         Livemode: bool
         /// Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
         Metadata: Map<string, string> option
+        /// The pause schedules for this subscription schedule.
+        PauseSchedules: SubscriptionSchedulesResourcePauseSchedule list option
         /// Configuration for the subscription schedule's phases.
         Phases: SubscriptionSchedulePhaseConfiguration list
         /// Time at which the subscription schedule was released. Measured in seconds since the Unix epoch.
@@ -321,7 +325,7 @@ type SubscriptionSchedule =
     }
 
 type SubscriptionSchedule with
-    static member New(application: SubscriptionScheduleApplication'AnyOf option, billingMode: SubscriptionsResourceBillingMode, canceledAt: DateTime option, completedAt: DateTime option, created: DateTime, currentPhase: SubscriptionScheduleCurrentPhase option, customer: SubscriptionScheduleCustomer'AnyOf, customerAccount: string option, defaultSettings: SubscriptionSchedulesResourceDefaultSettings, endBehavior: SubscriptionScheduleEndBehavior, id: string, livemode: bool, metadata: Map<string, string> option, phases: SubscriptionSchedulePhaseConfiguration list, releasedAt: DateTime option, releasedSubscription: string option, status: SubscriptionScheduleStatus, subscription: StripeId<Markers.Subscription> option, testClock: StripeId<Markers.TestHelpersTestClock> option) =
+    static member New(application: SubscriptionScheduleApplication'AnyOf option, billingMode: SubscriptionsResourceBillingMode, canceledAt: DateTime option, completedAt: DateTime option, created: DateTime, currentPhase: SubscriptionScheduleCurrentPhase option, customer: SubscriptionScheduleCustomer'AnyOf, customerAccount: string option, defaultSettings: SubscriptionSchedulesResourceDefaultSettings, endBehavior: SubscriptionScheduleEndBehavior, id: string, livemode: bool, metadata: Map<string, string> option, phases: SubscriptionSchedulePhaseConfiguration list, releasedAt: DateTime option, releasedSubscription: string option, status: SubscriptionScheduleStatus, subscription: StripeId<Markers.Subscription> option, testClock: StripeId<Markers.TestHelpersTestClock> option, ?pauseSchedules: SubscriptionSchedulesResourcePauseSchedule list) =
         {
             Application = application
             BillingMode = billingMode
@@ -342,6 +346,7 @@ type SubscriptionSchedule with
             Status = status
             Subscription = subscription
             TestClock = testClock
+            PauseSchedules = pauseSchedules
         }
 
 module SubscriptionSchedule =

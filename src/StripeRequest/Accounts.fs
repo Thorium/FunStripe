@@ -7,7 +7,7 @@ open Stripe.LoginLink
 open Stripe.PaymentMethod
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module Accounts =
 
     type ListOptions =
@@ -140,6 +140,9 @@ module Accounts =
             /// Internal-only description of the product sold by, or service provided by, the business. Used by Stripe for risk and underwriting purposes.
             [<Config.Form>]
             ProductDescription: string option
+            /// A link to the business's publicly available terms related to the Specified Commercial Transaction Act. Used by the Checkout product and for Japanese payment methods.
+            [<Config.Form>]
+            SpecifiedCommercialTransactionsActUrl: Choice<string,string> option
             /// A publicly available mailing address for sending support issues to.
             [<Config.Form>]
             SupportAddress: Create'BusinessProfileSupportAddress option
@@ -158,7 +161,7 @@ module Accounts =
         }
 
     type Create'BusinessProfile with
-        static member New(?annualRevenue: Create'BusinessProfileAnnualRevenue, ?estimatedWorkerCount: int, ?mcc: string, ?minorityOwnedBusinessDesignation: Create'BusinessProfileMinorityOwnedBusinessDesignation list, ?monthlyEstimatedRevenue: Create'BusinessProfileMonthlyEstimatedRevenue, ?name: string, ?productDescription: string, ?supportAddress: Create'BusinessProfileSupportAddress, ?supportEmail: string, ?supportPhone: string, ?supportUrl: Choice<string,string>, ?url: string) =
+        static member New(?annualRevenue: Create'BusinessProfileAnnualRevenue, ?estimatedWorkerCount: int, ?mcc: string, ?minorityOwnedBusinessDesignation: Create'BusinessProfileMinorityOwnedBusinessDesignation list, ?monthlyEstimatedRevenue: Create'BusinessProfileMonthlyEstimatedRevenue, ?name: string, ?productDescription: string, ?specifiedCommercialTransactionsActUrl: Choice<string,string>, ?supportAddress: Create'BusinessProfileSupportAddress, ?supportEmail: string, ?supportPhone: string, ?supportUrl: Choice<string,string>, ?url: string) =
             {
                 AnnualRevenue = annualRevenue
                 EstimatedWorkerCount = estimatedWorkerCount
@@ -167,6 +170,7 @@ module Accounts =
                 MonthlyEstimatedRevenue = monthlyEstimatedRevenue
                 Name = name
                 ProductDescription = productDescription
+                SpecifiedCommercialTransactionsActUrl = specifiedCommercialTransactionsActUrl
                 SupportAddress = supportAddress
                 SupportEmail = supportEmail
                 SupportPhone = supportPhone
@@ -344,6 +348,19 @@ module Accounts =
         }
 
     type Create'CapabilitiesBlikPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
+    type Create'CapabilitiesBlikRecurringPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Create'CapabilitiesBlikRecurringPayments with
         static member New(?requested: bool) =
             {
                 Requested = requested
@@ -765,6 +782,19 @@ module Accounts =
                 Requested = requested
             }
 
+    type Create'CapabilitiesPaypayPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Create'CapabilitiesPaypayPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
     type Create'CapabilitiesPaytoPayments =
         {
             /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
@@ -877,6 +907,19 @@ module Accounts =
         }
 
     type Create'CapabilitiesSepaDebitPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
+    type Create'CapabilitiesSequraPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Create'CapabilitiesSequraPayments with
         static member New(?requested: bool) =
             {
                 Requested = requested
@@ -1079,6 +1122,9 @@ module Accounts =
             /// The blik_payments capability.
             [<Config.Form>]
             BlikPayments: Create'CapabilitiesBlikPayments option
+            /// The blik_recurring_payments capability.
+            [<Config.Form>]
+            BlikRecurringPayments: Create'CapabilitiesBlikRecurringPayments option
             /// The boleto_payments capability.
             [<Config.Form>]
             BoletoPayments: Create'CapabilitiesBoletoPayments option
@@ -1175,6 +1221,9 @@ module Accounts =
             /// The paynow_payments capability.
             [<Config.Form>]
             PaynowPayments: Create'CapabilitiesPaynowPayments option
+            /// The paypay_payments capability.
+            [<Config.Form>]
+            PaypayPayments: Create'CapabilitiesPaypayPayments option
             /// The payto_payments capability.
             [<Config.Form>]
             PaytoPayments: Create'CapabilitiesPaytoPayments option
@@ -1202,6 +1251,9 @@ module Accounts =
             /// The sepa_debit_payments capability.
             [<Config.Form>]
             SepaDebitPayments: Create'CapabilitiesSepaDebitPayments option
+            /// The sequra_payments capability.
+            [<Config.Form>]
+            SequraPayments: Create'CapabilitiesSequraPayments option
             /// The sofort_payments capability.
             [<Config.Form>]
             SofortPayments: Create'CapabilitiesSofortPayments option
@@ -1241,7 +1293,7 @@ module Accounts =
         }
 
     type Create'Capabilities with
-        static member New(?acssDebitPayments: Create'CapabilitiesAcssDebitPayments, ?affirmPayments: Create'CapabilitiesAffirmPayments, ?afterpayClearpayPayments: Create'CapabilitiesAfterpayClearpayPayments, ?almaPayments: Create'CapabilitiesAlmaPayments, ?amazonPayPayments: Create'CapabilitiesAmazonPayPayments, ?appDistribution: Create'CapabilitiesAppDistribution, ?auBecsDebitPayments: Create'CapabilitiesAuBecsDebitPayments, ?bacsDebitPayments: Create'CapabilitiesBacsDebitPayments, ?bancontactPayments: Create'CapabilitiesBancontactPayments, ?bankTransferPayments: Create'CapabilitiesBankTransferPayments, ?billiePayments: Create'CapabilitiesBilliePayments, ?bizumPayments: Create'CapabilitiesBizumPayments, ?blikPayments: Create'CapabilitiesBlikPayments, ?boletoPayments: Create'CapabilitiesBoletoPayments, ?cardIssuing: Create'CapabilitiesCardIssuing, ?cardPayments: Create'CapabilitiesCardPayments, ?cartesBancairesPayments: Create'CapabilitiesCartesBancairesPayments, ?cashappPayments: Create'CapabilitiesCashappPayments, ?cryptoPayments: Create'CapabilitiesCryptoPayments, ?epsPayments: Create'CapabilitiesEpsPayments, ?fpxPayments: Create'CapabilitiesFpxPayments, ?gbBankTransferPayments: Create'CapabilitiesGbBankTransferPayments, ?giropayPayments: Create'CapabilitiesGiropayPayments, ?grabpayPayments: Create'CapabilitiesGrabpayPayments, ?idealPayments: Create'CapabilitiesIdealPayments, ?indiaInternationalPayments: Create'CapabilitiesIndiaInternationalPayments, ?jcbPayments: Create'CapabilitiesJcbPayments, ?jpBankTransferPayments: Create'CapabilitiesJpBankTransferPayments, ?kakaoPayPayments: Create'CapabilitiesKakaoPayPayments, ?klarnaPayments: Create'CapabilitiesKlarnaPayments, ?konbiniPayments: Create'CapabilitiesKonbiniPayments, ?krCardPayments: Create'CapabilitiesKrCardPayments, ?legacyPayments: Create'CapabilitiesLegacyPayments, ?linkPayments: Create'CapabilitiesLinkPayments, ?mbWayPayments: Create'CapabilitiesMbWayPayments, ?mobilepayPayments: Create'CapabilitiesMobilepayPayments, ?multibancoPayments: Create'CapabilitiesMultibancoPayments, ?mxBankTransferPayments: Create'CapabilitiesMxBankTransferPayments, ?naverPayPayments: Create'CapabilitiesNaverPayPayments, ?nzBankAccountBecsDebitPayments: Create'CapabilitiesNzBankAccountBecsDebitPayments, ?oxxoPayments: Create'CapabilitiesOxxoPayments, ?p24Payments: Create'CapabilitiesP24Payments, ?payByBankPayments: Create'CapabilitiesPayByBankPayments, ?paycoPayments: Create'CapabilitiesPaycoPayments, ?paynowPayments: Create'CapabilitiesPaynowPayments, ?paytoPayments: Create'CapabilitiesPaytoPayments, ?pixPayments: Create'CapabilitiesPixPayments, ?promptpayPayments: Create'CapabilitiesPromptpayPayments, ?revolutPayPayments: Create'CapabilitiesRevolutPayPayments, ?samsungPayPayments: Create'CapabilitiesSamsungPayPayments, ?satispayPayments: Create'CapabilitiesSatispayPayments, ?scalapayPayments: Create'CapabilitiesScalapayPayments, ?sepaBankTransferPayments: Create'CapabilitiesSepaBankTransferPayments, ?sepaDebitPayments: Create'CapabilitiesSepaDebitPayments, ?sofortPayments: Create'CapabilitiesSofortPayments, ?sunbitPayments: Create'CapabilitiesSunbitPayments, ?swishPayments: Create'CapabilitiesSwishPayments, ?taxReportingUs1099K: Create'CapabilitiesTaxReportingUs1099K, ?taxReportingUs1099Misc: Create'CapabilitiesTaxReportingUs1099Misc, ?transfers: Create'CapabilitiesTransfers, ?treasury: Create'CapabilitiesTreasury, ?twintPayments: Create'CapabilitiesTwintPayments, ?upiPayments: Create'CapabilitiesUpiPayments, ?usBankAccountAchPayments: Create'CapabilitiesUsBankAccountAchPayments, ?usBankTransferPayments: Create'CapabilitiesUsBankTransferPayments, ?zipPayments: Create'CapabilitiesZipPayments) =
+        static member New(?acssDebitPayments: Create'CapabilitiesAcssDebitPayments, ?affirmPayments: Create'CapabilitiesAffirmPayments, ?afterpayClearpayPayments: Create'CapabilitiesAfterpayClearpayPayments, ?almaPayments: Create'CapabilitiesAlmaPayments, ?amazonPayPayments: Create'CapabilitiesAmazonPayPayments, ?appDistribution: Create'CapabilitiesAppDistribution, ?auBecsDebitPayments: Create'CapabilitiesAuBecsDebitPayments, ?bacsDebitPayments: Create'CapabilitiesBacsDebitPayments, ?bancontactPayments: Create'CapabilitiesBancontactPayments, ?bankTransferPayments: Create'CapabilitiesBankTransferPayments, ?billiePayments: Create'CapabilitiesBilliePayments, ?bizumPayments: Create'CapabilitiesBizumPayments, ?blikPayments: Create'CapabilitiesBlikPayments, ?blikRecurringPayments: Create'CapabilitiesBlikRecurringPayments, ?boletoPayments: Create'CapabilitiesBoletoPayments, ?cardIssuing: Create'CapabilitiesCardIssuing, ?cardPayments: Create'CapabilitiesCardPayments, ?cartesBancairesPayments: Create'CapabilitiesCartesBancairesPayments, ?cashappPayments: Create'CapabilitiesCashappPayments, ?cryptoPayments: Create'CapabilitiesCryptoPayments, ?epsPayments: Create'CapabilitiesEpsPayments, ?fpxPayments: Create'CapabilitiesFpxPayments, ?gbBankTransferPayments: Create'CapabilitiesGbBankTransferPayments, ?giropayPayments: Create'CapabilitiesGiropayPayments, ?grabpayPayments: Create'CapabilitiesGrabpayPayments, ?idealPayments: Create'CapabilitiesIdealPayments, ?indiaInternationalPayments: Create'CapabilitiesIndiaInternationalPayments, ?jcbPayments: Create'CapabilitiesJcbPayments, ?jpBankTransferPayments: Create'CapabilitiesJpBankTransferPayments, ?kakaoPayPayments: Create'CapabilitiesKakaoPayPayments, ?klarnaPayments: Create'CapabilitiesKlarnaPayments, ?konbiniPayments: Create'CapabilitiesKonbiniPayments, ?krCardPayments: Create'CapabilitiesKrCardPayments, ?legacyPayments: Create'CapabilitiesLegacyPayments, ?linkPayments: Create'CapabilitiesLinkPayments, ?mbWayPayments: Create'CapabilitiesMbWayPayments, ?mobilepayPayments: Create'CapabilitiesMobilepayPayments, ?multibancoPayments: Create'CapabilitiesMultibancoPayments, ?mxBankTransferPayments: Create'CapabilitiesMxBankTransferPayments, ?naverPayPayments: Create'CapabilitiesNaverPayPayments, ?nzBankAccountBecsDebitPayments: Create'CapabilitiesNzBankAccountBecsDebitPayments, ?oxxoPayments: Create'CapabilitiesOxxoPayments, ?p24Payments: Create'CapabilitiesP24Payments, ?payByBankPayments: Create'CapabilitiesPayByBankPayments, ?paycoPayments: Create'CapabilitiesPaycoPayments, ?paynowPayments: Create'CapabilitiesPaynowPayments, ?paypayPayments: Create'CapabilitiesPaypayPayments, ?paytoPayments: Create'CapabilitiesPaytoPayments, ?pixPayments: Create'CapabilitiesPixPayments, ?promptpayPayments: Create'CapabilitiesPromptpayPayments, ?revolutPayPayments: Create'CapabilitiesRevolutPayPayments, ?samsungPayPayments: Create'CapabilitiesSamsungPayPayments, ?satispayPayments: Create'CapabilitiesSatispayPayments, ?scalapayPayments: Create'CapabilitiesScalapayPayments, ?sepaBankTransferPayments: Create'CapabilitiesSepaBankTransferPayments, ?sepaDebitPayments: Create'CapabilitiesSepaDebitPayments, ?sequraPayments: Create'CapabilitiesSequraPayments, ?sofortPayments: Create'CapabilitiesSofortPayments, ?sunbitPayments: Create'CapabilitiesSunbitPayments, ?swishPayments: Create'CapabilitiesSwishPayments, ?taxReportingUs1099K: Create'CapabilitiesTaxReportingUs1099K, ?taxReportingUs1099Misc: Create'CapabilitiesTaxReportingUs1099Misc, ?transfers: Create'CapabilitiesTransfers, ?treasury: Create'CapabilitiesTreasury, ?twintPayments: Create'CapabilitiesTwintPayments, ?upiPayments: Create'CapabilitiesUpiPayments, ?usBankAccountAchPayments: Create'CapabilitiesUsBankAccountAchPayments, ?usBankTransferPayments: Create'CapabilitiesUsBankTransferPayments, ?zipPayments: Create'CapabilitiesZipPayments) =
             {
                 AcssDebitPayments = acssDebitPayments
                 AffirmPayments = affirmPayments
@@ -1256,6 +1308,7 @@ module Accounts =
                 BilliePayments = billiePayments
                 BizumPayments = bizumPayments
                 BlikPayments = blikPayments
+                BlikRecurringPayments = blikRecurringPayments
                 BoletoPayments = boletoPayments
                 CardIssuing = cardIssuing
                 CardPayments = cardPayments
@@ -1288,6 +1341,7 @@ module Accounts =
                 PayByBankPayments = payByBankPayments
                 PaycoPayments = paycoPayments
                 PaynowPayments = paynowPayments
+                PaypayPayments = paypayPayments
                 PaytoPayments = paytoPayments
                 PixPayments = pixPayments
                 PromptpayPayments = promptpayPayments
@@ -1297,6 +1351,7 @@ module Accounts =
                 ScalapayPayments = scalapayPayments
                 SepaBankTransferPayments = sepaBankTransferPayments
                 SepaDebitPayments = sepaDebitPayments
+                SequraPayments = sequraPayments
                 SofortPayments = sofortPayments
                 SunbitPayments = sunbitPayments
                 SwishPayments = swishPayments
@@ -1418,6 +1473,39 @@ module Accounts =
                 Town = town
             }
 
+    type Create'CompanyAdministrativeAddress =
+        {
+            /// City, district, suburb, town, or village.
+            [<Config.Form>]
+            City: string option
+            /// Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+            [<Config.Form>]
+            Country: IsoTypes.IsoCountryCode option
+            /// Address line 1, such as the street, PO Box, or company name.
+            [<Config.Form>]
+            Line1: string option
+            /// Address line 2, such as the apartment, suite, unit, or building.
+            [<Config.Form>]
+            Line2: string option
+            /// ZIP or postal code.
+            [<Config.Form>]
+            PostalCode: string option
+            /// State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+            [<Config.Form>]
+            State: string option
+        }
+
+    type Create'CompanyAdministrativeAddress with
+        static member New(?city: string, ?country: IsoTypes.IsoCountryCode, ?line1: string, ?line2: string, ?postalCode: string, ?state: string) =
+            {
+                City = city
+                Country = country
+                Line1 = line1
+                Line2 = line2
+                PostalCode = postalCode
+                State = state
+            }
+
     type Create'CompanyDirectorshipDeclaration =
         {
             /// The Unix timestamp marking when the directorship declaration attestation was made.
@@ -1463,6 +1551,39 @@ module Accounts =
     type Create'CompanyOwnershipExemptionReason =
         | QualifiedEntityExceedsOwnershipThreshold
         | QualifiesAsFinancialInstitution
+
+    type Create'CompanyPrincipalPlaceOfBusiness =
+        {
+            /// City, district, suburb, town, or village.
+            [<Config.Form>]
+            City: string option
+            /// Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+            [<Config.Form>]
+            Country: IsoTypes.IsoCountryCode option
+            /// Address line 1, such as the street, PO Box, or company name.
+            [<Config.Form>]
+            Line1: string option
+            /// Address line 2, such as the apartment, suite, unit, or building.
+            [<Config.Form>]
+            Line2: string option
+            /// ZIP or postal code.
+            [<Config.Form>]
+            PostalCode: string option
+            /// State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+            [<Config.Form>]
+            State: string option
+        }
+
+    type Create'CompanyPrincipalPlaceOfBusiness with
+        static member New(?city: string, ?country: IsoTypes.IsoCountryCode, ?line1: string, ?line2: string, ?postalCode: string, ?state: string) =
+            {
+                City = city
+                Country = country
+                Line1 = line1
+                Line2 = line2
+                PostalCode = postalCode
+                State = state
+            }
 
     type Create'CompanyRegistrationDateRegistrationDateSpecs =
         {
@@ -1533,10 +1654,10 @@ module Accounts =
 
     type Create'CompanyVerificationDocument =
         {
-            /// The back of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of a document returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of a document returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -1572,6 +1693,9 @@ module Accounts =
             /// The Kanji variation of the company's primary address (Japan only).
             [<Config.Form>]
             AddressKanji: Create'CompanyAddressKanji option
+            /// The location where the business is administered.
+            [<Config.Form>]
+            AdministrativeAddress: Create'CompanyAdministrativeAddress option
             /// Whether the company's directors have been provided. Set this Boolean to `true` after creating all the company's directors with [the Persons API](/api/persons) for accounts with a `relationship.director` requirement. This value is not automatically set to `true` after creating directors, so it needs to be updated to indicate all directors have been provided.
             [<Config.Form>]
             DirectorsProvided: bool option
@@ -1608,6 +1732,9 @@ module Accounts =
             /// The company's phone number (used for verification).
             [<Config.Form>]
             Phone: string option
+            /// The primary location where the business conducts operations.
+            [<Config.Form>]
+            PrincipalPlaceOfBusiness: Create'CompanyPrincipalPlaceOfBusiness option
             /// When the business was incorporated or registered.
             [<Config.Form>]
             RegistrationDate: Choice<Create'CompanyRegistrationDateRegistrationDateSpecs,string> option
@@ -1621,6 +1748,7 @@ module Accounts =
             [<Config.Form>]
             Structure: Create'CompanyStructure option
             /// The business ID number of the company, as appropriate for the company’s country. (Examples are an Employer ID Number in the U.S., a Business Number in Canada, or a Company Number in the UK.)
+            /// Changing this value requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             TaxId: string option
             /// The jurisdiction in which the `tax_id` is registered (Germany-based companies only).
@@ -1635,11 +1763,12 @@ module Accounts =
         }
 
     type Create'Company with
-        static member New(?address: Create'CompanyAddress, ?addressKana: Create'CompanyAddressKana, ?addressKanji: Create'CompanyAddressKanji, ?directorsProvided: bool, ?directorshipDeclaration: Create'CompanyDirectorshipDeclaration, ?executivesProvided: bool, ?exportLicenseId: string, ?exportPurposeCode: string, ?name: string, ?nameKana: string, ?nameKanji: string, ?ownersProvided: bool, ?ownershipDeclaration: Create'CompanyOwnershipDeclaration, ?ownershipExemptionReason: Create'CompanyOwnershipExemptionReason, ?phone: string, ?registrationDate: Choice<Create'CompanyRegistrationDateRegistrationDateSpecs,string>, ?registrationNumber: string, ?representativeDeclaration: Create'CompanyRepresentativeDeclaration, ?structure: Create'CompanyStructure, ?taxId: string, ?taxIdRegistrar: string, ?vatId: string, ?verification: Create'CompanyVerification) =
+        static member New(?address: Create'CompanyAddress, ?addressKana: Create'CompanyAddressKana, ?addressKanji: Create'CompanyAddressKanji, ?administrativeAddress: Create'CompanyAdministrativeAddress, ?directorsProvided: bool, ?directorshipDeclaration: Create'CompanyDirectorshipDeclaration, ?executivesProvided: bool, ?exportLicenseId: string, ?exportPurposeCode: string, ?name: string, ?nameKana: string, ?nameKanji: string, ?ownersProvided: bool, ?ownershipDeclaration: Create'CompanyOwnershipDeclaration, ?ownershipExemptionReason: Create'CompanyOwnershipExemptionReason, ?phone: string, ?principalPlaceOfBusiness: Create'CompanyPrincipalPlaceOfBusiness, ?registrationDate: Choice<Create'CompanyRegistrationDateRegistrationDateSpecs,string>, ?registrationNumber: string, ?representativeDeclaration: Create'CompanyRepresentativeDeclaration, ?structure: Create'CompanyStructure, ?taxId: string, ?taxIdRegistrar: string, ?vatId: string, ?verification: Create'CompanyVerification) =
             {
                 Address = address
                 AddressKana = addressKana
                 AddressKanji = addressKanji
+                AdministrativeAddress = administrativeAddress
                 DirectorsProvided = directorsProvided
                 DirectorshipDeclaration = directorshipDeclaration
                 ExecutivesProvided = executivesProvided
@@ -1652,6 +1781,7 @@ module Accounts =
                 OwnershipDeclaration = ownershipDeclaration
                 OwnershipExemptionReason = ownershipExemptionReason
                 Phone = phone
+                PrincipalPlaceOfBusiness = principalPlaceOfBusiness
                 RegistrationDate = registrationDate
                 RegistrationNumber = registrationNumber
                 RepresentativeDeclaration = representativeDeclaration
@@ -1745,7 +1875,7 @@ module Accounts =
 
     type Create'DocumentsBankAccountOwnershipVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1758,7 +1888,7 @@ module Accounts =
 
     type Create'DocumentsCompanyLicense =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1771,7 +1901,7 @@ module Accounts =
 
     type Create'DocumentsCompanyMemorandumOfAssociation =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1784,7 +1914,7 @@ module Accounts =
 
     type Create'DocumentsCompanyMinisterialDecree =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1797,7 +1927,7 @@ module Accounts =
 
     type Create'DocumentsCompanyRegistrationVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1810,7 +1940,7 @@ module Accounts =
 
     type Create'DocumentsCompanyTaxIdVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1823,7 +1953,7 @@ module Accounts =
 
     type Create'DocumentsProofOfAddress =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -1832,36 +1962,6 @@ module Accounts =
         static member New(?files: string list) =
             {
                 Files = files
-            }
-
-    type Create'DocumentsProofOfRegistrationSigner =
-        {
-            /// The token of the person signing the document, if applicable.
-            [<Config.Form>]
-            Person: string option
-        }
-
-    type Create'DocumentsProofOfRegistrationSigner with
-        static member New(?person: string) =
-            {
-                Person = person
-            }
-
-    type Create'DocumentsProofOfRegistration =
-        {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
-            [<Config.Form>]
-            Files: string list option
-            /// Information regarding the person signing the document if applicable.
-            [<Config.Form>]
-            Signer: Create'DocumentsProofOfRegistrationSigner option
-        }
-
-    type Create'DocumentsProofOfRegistration with
-        static member New(?files: string list, ?signer: Create'DocumentsProofOfRegistrationSigner) =
-            {
-                Files = files
-                Signer = signer
             }
 
     type Create'DocumentsProofOfUltimateBeneficialOwnershipSigner =
@@ -1879,7 +1979,7 @@ module Accounts =
 
     type Create'DocumentsProofOfUltimateBeneficialOwnership =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
             /// Information regarding the person signing the document if applicable.
@@ -1917,16 +2017,13 @@ module Accounts =
             /// One or more documents that demonstrate proof of address.
             [<Config.Form>]
             ProofOfAddress: Create'DocumentsProofOfAddress option
-            /// One or more documents showing the company’s proof of registration with the national business registry.
-            [<Config.Form>]
-            ProofOfRegistration: Create'DocumentsProofOfRegistration option
             /// One or more documents that demonstrate proof of ultimate beneficial ownership.
             [<Config.Form>]
             ProofOfUltimateBeneficialOwnership: Create'DocumentsProofOfUltimateBeneficialOwnership option
         }
 
     type Create'Documents with
-        static member New(?bankAccountOwnershipVerification: Create'DocumentsBankAccountOwnershipVerification, ?companyLicense: Create'DocumentsCompanyLicense, ?companyMemorandumOfAssociation: Create'DocumentsCompanyMemorandumOfAssociation, ?companyMinisterialDecree: Create'DocumentsCompanyMinisterialDecree, ?companyRegistrationVerification: Create'DocumentsCompanyRegistrationVerification, ?companyTaxIdVerification: Create'DocumentsCompanyTaxIdVerification, ?proofOfAddress: Create'DocumentsProofOfAddress, ?proofOfRegistration: Create'DocumentsProofOfRegistration, ?proofOfUltimateBeneficialOwnership: Create'DocumentsProofOfUltimateBeneficialOwnership) =
+        static member New(?bankAccountOwnershipVerification: Create'DocumentsBankAccountOwnershipVerification, ?companyLicense: Create'DocumentsCompanyLicense, ?companyMemorandumOfAssociation: Create'DocumentsCompanyMemorandumOfAssociation, ?companyMinisterialDecree: Create'DocumentsCompanyMinisterialDecree, ?companyRegistrationVerification: Create'DocumentsCompanyRegistrationVerification, ?companyTaxIdVerification: Create'DocumentsCompanyTaxIdVerification, ?proofOfAddress: Create'DocumentsProofOfAddress, ?proofOfUltimateBeneficialOwnership: Create'DocumentsProofOfUltimateBeneficialOwnership) =
             {
                 BankAccountOwnershipVerification = bankAccountOwnershipVerification
                 CompanyLicense = companyLicense
@@ -1935,7 +2032,6 @@ module Accounts =
                 CompanyRegistrationVerification = companyRegistrationVerification
                 CompanyTaxIdVerification = companyTaxIdVerification
                 ProofOfAddress = proofOfAddress
-                ProofOfRegistration = proofOfRegistration
                 ProofOfUltimateBeneficialOwnership = proofOfUltimateBeneficialOwnership
             }
 
@@ -2148,10 +2244,10 @@ module Accounts =
 
     type Create'IndividualVerificationAdditionalDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -2165,10 +2261,10 @@ module Accounts =
 
     type Create'IndividualVerificationDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -2529,6 +2625,104 @@ module Accounts =
                 StatementDescriptor = statementDescriptor
             }
 
+    type Create'SettingsPaypayPaymentsGoodsType =
+        | DigitalContent
+        | Other
+
+    type Create'SettingsPaypayPaymentsSiteInDevelopment =
+        {
+            /// The password needed to access your business's website.
+            [<Config.Form>]
+            Password: string option
+            /// The username needed to access your business's website.
+            [<Config.Form>]
+            Username: string option
+        }
+
+    type Create'SettingsPaypayPaymentsSiteInDevelopment with
+        static member New(?password: string, ?username: string) =
+            {
+                Password = password
+                Username = username
+            }
+
+    type Create'SettingsPaypayPaymentsSiteRestricted =
+        {
+            /// The file explaining the payment flow for your business.
+            [<Config.Form>]
+            PaymentFlowFile: string option
+        }
+
+    type Create'SettingsPaypayPaymentsSiteRestricted with
+        static member New(?paymentFlowFile: string) =
+            {
+                PaymentFlowFile = paymentFlowFile
+            }
+
+    type Create'SettingsPaypayPaymentsSiteType =
+        | Accessible
+        | InDevelopment
+        | Restricted
+
+    type Create'SettingsPaypayPaymentsSite =
+        {
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            Accessible: string option
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            InDevelopment: Create'SettingsPaypayPaymentsSiteInDevelopment option
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            Restricted: Create'SettingsPaypayPaymentsSiteRestricted option
+            /// The status of your business's website.
+            [<Config.Form>]
+            Type: Create'SettingsPaypayPaymentsSiteType option
+        }
+
+    type Create'SettingsPaypayPaymentsSite with
+        static member New(?accessible: string, ?inDevelopment: Create'SettingsPaypayPaymentsSiteInDevelopment, ?restricted: Create'SettingsPaypayPaymentsSiteRestricted, ?type': Create'SettingsPaypayPaymentsSiteType) =
+            {
+                Accessible = accessible
+                InDevelopment = inDevelopment
+                Restricted = restricted
+                Type = type'
+            }
+
+    type Create'SettingsPaypayPayments =
+        {
+            /// Additional files that are required to support the onboarding process of your business.
+            [<Config.Form>]
+            AdditionalFiles: string list option
+            /// The type of goods your business sells. Use `digital_content` if you sell digital content. Use `other` for all other types of goods or services.
+            [<Config.Form>]
+            GoodsType: Create'SettingsPaypayPaymentsGoodsType option
+            /// Details regarding your business's website.
+            [<Config.Form>]
+            Site: Create'SettingsPaypayPaymentsSite option
+        }
+
+    type Create'SettingsPaypayPayments with
+        static member New(?additionalFiles: string list, ?goodsType: Create'SettingsPaypayPaymentsGoodsType, ?site: Create'SettingsPaypayPaymentsSite) =
+            {
+                AdditionalFiles = additionalFiles
+                GoodsType = goodsType
+                Site = site
+            }
+
+    type Create'SettingsSepaDebitPayments =
+        {
+            /// The business creditor id for european payments.
+            [<Config.Form>]
+            CreditorId: string option
+        }
+
+    type Create'SettingsSepaDebitPayments with
+        static member New(?creditorId: string) =
+            {
+                CreditorId = creditorId
+            }
+
     type Create'SettingsTreasuryTosAcceptance =
         {
             /// The Unix timestamp marking when the account representative accepted the service agreement.
@@ -2586,13 +2780,19 @@ module Accounts =
             /// Settings specific to the account's payouts.
             [<Config.Form>]
             Payouts: Create'SettingsPayouts option
+            /// Settings specific to the PayPay payments method.
+            [<Config.Form>]
+            PaypayPayments: Create'SettingsPaypayPayments option
+            /// Settings specific to SEPA Direct Debit payments.
+            [<Config.Form>]
+            SepaDebitPayments: Create'SettingsSepaDebitPayments option
             /// Settings specific to the account's Treasury FinancialAccounts.
             [<Config.Form>]
             Treasury: Create'SettingsTreasury option
         }
 
     type Create'Settings with
-        static member New(?bacsDebitPayments: Create'SettingsBacsDebitPayments, ?branding: Create'SettingsBranding, ?cardIssuing: Create'SettingsCardIssuing, ?cardPayments: Create'SettingsCardPayments, ?invoices: Create'SettingsInvoices, ?payments: Create'SettingsPayments, ?payouts: Create'SettingsPayouts, ?treasury: Create'SettingsTreasury) =
+        static member New(?bacsDebitPayments: Create'SettingsBacsDebitPayments, ?branding: Create'SettingsBranding, ?cardIssuing: Create'SettingsCardIssuing, ?cardPayments: Create'SettingsCardPayments, ?invoices: Create'SettingsInvoices, ?payments: Create'SettingsPayments, ?payouts: Create'SettingsPayouts, ?paypayPayments: Create'SettingsPaypayPayments, ?sepaDebitPayments: Create'SettingsSepaDebitPayments, ?treasury: Create'SettingsTreasury) =
             {
                 BacsDebitPayments = bacsDebitPayments
                 Branding = branding
@@ -2601,6 +2801,8 @@ module Accounts =
                 Invoices = invoices
                 Payments = payments
                 Payouts = payouts
+                PaypayPayments = paypayPayments
+                SepaDebitPayments = sepaDebitPayments
                 Treasury = treasury
             }
 
@@ -2636,7 +2838,7 @@ module Accounts =
 
     type CreateOptions =
         {
-            /// An [account token](https://api.stripe.com#create_account_token), used to securely provide details to the account.
+            /// An [account token](https://docs.stripe.com/api#create_account_token), used to securely provide details to the account.
             [<Config.Form>]
             AccountToken: string option
             /// Business information about the account.
@@ -2848,6 +3050,9 @@ module Accounts =
             /// Internal-only description of the product sold by, or service provided by, the business. Used by Stripe for risk and underwriting purposes.
             [<Config.Form>]
             ProductDescription: string option
+            /// A link to the business's publicly available terms related to the Specified Commercial Transaction Act. Only used for accounts in Japan.
+            [<Config.Form>]
+            SpecifiedCommercialTransactionsActUrl: Choice<string,string> option
             /// A publicly available mailing address for sending support issues to.
             [<Config.Form>]
             SupportAddress: Update'BusinessProfileSupportAddress option
@@ -2866,7 +3071,7 @@ module Accounts =
         }
 
     type Update'BusinessProfile with
-        static member New(?annualRevenue: Update'BusinessProfileAnnualRevenue, ?estimatedWorkerCount: int, ?mcc: string, ?minorityOwnedBusinessDesignation: Update'BusinessProfileMinorityOwnedBusinessDesignation list, ?monthlyEstimatedRevenue: Update'BusinessProfileMonthlyEstimatedRevenue, ?name: string, ?productDescription: string, ?supportAddress: Update'BusinessProfileSupportAddress, ?supportEmail: string, ?supportPhone: string, ?supportUrl: Choice<string,string>, ?url: string) =
+        static member New(?annualRevenue: Update'BusinessProfileAnnualRevenue, ?estimatedWorkerCount: int, ?mcc: string, ?minorityOwnedBusinessDesignation: Update'BusinessProfileMinorityOwnedBusinessDesignation list, ?monthlyEstimatedRevenue: Update'BusinessProfileMonthlyEstimatedRevenue, ?name: string, ?productDescription: string, ?specifiedCommercialTransactionsActUrl: Choice<string,string>, ?supportAddress: Update'BusinessProfileSupportAddress, ?supportEmail: string, ?supportPhone: string, ?supportUrl: Choice<string,string>, ?url: string) =
             {
                 AnnualRevenue = annualRevenue
                 EstimatedWorkerCount = estimatedWorkerCount
@@ -2875,6 +3080,7 @@ module Accounts =
                 MonthlyEstimatedRevenue = monthlyEstimatedRevenue
                 Name = name
                 ProductDescription = productDescription
+                SpecifiedCommercialTransactionsActUrl = specifiedCommercialTransactionsActUrl
                 SupportAddress = supportAddress
                 SupportEmail = supportEmail
                 SupportPhone = supportPhone
@@ -3052,6 +3258,19 @@ module Accounts =
         }
 
     type Update'CapabilitiesBlikPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
+    type Update'CapabilitiesBlikRecurringPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Update'CapabilitiesBlikRecurringPayments with
         static member New(?requested: bool) =
             {
                 Requested = requested
@@ -3473,6 +3692,19 @@ module Accounts =
                 Requested = requested
             }
 
+    type Update'CapabilitiesPaypayPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Update'CapabilitiesPaypayPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
     type Update'CapabilitiesPaytoPayments =
         {
             /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
@@ -3585,6 +3817,19 @@ module Accounts =
         }
 
     type Update'CapabilitiesSepaDebitPayments with
+        static member New(?requested: bool) =
+            {
+                Requested = requested
+            }
+
+    type Update'CapabilitiesSequraPayments =
+        {
+            /// Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+            [<Config.Form>]
+            Requested: bool option
+        }
+
+    type Update'CapabilitiesSequraPayments with
         static member New(?requested: bool) =
             {
                 Requested = requested
@@ -3787,6 +4032,9 @@ module Accounts =
             /// The blik_payments capability.
             [<Config.Form>]
             BlikPayments: Update'CapabilitiesBlikPayments option
+            /// The blik_recurring_payments capability.
+            [<Config.Form>]
+            BlikRecurringPayments: Update'CapabilitiesBlikRecurringPayments option
             /// The boleto_payments capability.
             [<Config.Form>]
             BoletoPayments: Update'CapabilitiesBoletoPayments option
@@ -3883,6 +4131,9 @@ module Accounts =
             /// The paynow_payments capability.
             [<Config.Form>]
             PaynowPayments: Update'CapabilitiesPaynowPayments option
+            /// The paypay_payments capability.
+            [<Config.Form>]
+            PaypayPayments: Update'CapabilitiesPaypayPayments option
             /// The payto_payments capability.
             [<Config.Form>]
             PaytoPayments: Update'CapabilitiesPaytoPayments option
@@ -3910,6 +4161,9 @@ module Accounts =
             /// The sepa_debit_payments capability.
             [<Config.Form>]
             SepaDebitPayments: Update'CapabilitiesSepaDebitPayments option
+            /// The sequra_payments capability.
+            [<Config.Form>]
+            SequraPayments: Update'CapabilitiesSequraPayments option
             /// The sofort_payments capability.
             [<Config.Form>]
             SofortPayments: Update'CapabilitiesSofortPayments option
@@ -3949,7 +4203,7 @@ module Accounts =
         }
 
     type Update'Capabilities with
-        static member New(?acssDebitPayments: Update'CapabilitiesAcssDebitPayments, ?affirmPayments: Update'CapabilitiesAffirmPayments, ?afterpayClearpayPayments: Update'CapabilitiesAfterpayClearpayPayments, ?almaPayments: Update'CapabilitiesAlmaPayments, ?amazonPayPayments: Update'CapabilitiesAmazonPayPayments, ?appDistribution: Update'CapabilitiesAppDistribution, ?auBecsDebitPayments: Update'CapabilitiesAuBecsDebitPayments, ?bacsDebitPayments: Update'CapabilitiesBacsDebitPayments, ?bancontactPayments: Update'CapabilitiesBancontactPayments, ?bankTransferPayments: Update'CapabilitiesBankTransferPayments, ?billiePayments: Update'CapabilitiesBilliePayments, ?bizumPayments: Update'CapabilitiesBizumPayments, ?blikPayments: Update'CapabilitiesBlikPayments, ?boletoPayments: Update'CapabilitiesBoletoPayments, ?cardIssuing: Update'CapabilitiesCardIssuing, ?cardPayments: Update'CapabilitiesCardPayments, ?cartesBancairesPayments: Update'CapabilitiesCartesBancairesPayments, ?cashappPayments: Update'CapabilitiesCashappPayments, ?cryptoPayments: Update'CapabilitiesCryptoPayments, ?epsPayments: Update'CapabilitiesEpsPayments, ?fpxPayments: Update'CapabilitiesFpxPayments, ?gbBankTransferPayments: Update'CapabilitiesGbBankTransferPayments, ?giropayPayments: Update'CapabilitiesGiropayPayments, ?grabpayPayments: Update'CapabilitiesGrabpayPayments, ?idealPayments: Update'CapabilitiesIdealPayments, ?indiaInternationalPayments: Update'CapabilitiesIndiaInternationalPayments, ?jcbPayments: Update'CapabilitiesJcbPayments, ?jpBankTransferPayments: Update'CapabilitiesJpBankTransferPayments, ?kakaoPayPayments: Update'CapabilitiesKakaoPayPayments, ?klarnaPayments: Update'CapabilitiesKlarnaPayments, ?konbiniPayments: Update'CapabilitiesKonbiniPayments, ?krCardPayments: Update'CapabilitiesKrCardPayments, ?legacyPayments: Update'CapabilitiesLegacyPayments, ?linkPayments: Update'CapabilitiesLinkPayments, ?mbWayPayments: Update'CapabilitiesMbWayPayments, ?mobilepayPayments: Update'CapabilitiesMobilepayPayments, ?multibancoPayments: Update'CapabilitiesMultibancoPayments, ?mxBankTransferPayments: Update'CapabilitiesMxBankTransferPayments, ?naverPayPayments: Update'CapabilitiesNaverPayPayments, ?nzBankAccountBecsDebitPayments: Update'CapabilitiesNzBankAccountBecsDebitPayments, ?oxxoPayments: Update'CapabilitiesOxxoPayments, ?p24Payments: Update'CapabilitiesP24Payments, ?payByBankPayments: Update'CapabilitiesPayByBankPayments, ?paycoPayments: Update'CapabilitiesPaycoPayments, ?paynowPayments: Update'CapabilitiesPaynowPayments, ?paytoPayments: Update'CapabilitiesPaytoPayments, ?pixPayments: Update'CapabilitiesPixPayments, ?promptpayPayments: Update'CapabilitiesPromptpayPayments, ?revolutPayPayments: Update'CapabilitiesRevolutPayPayments, ?samsungPayPayments: Update'CapabilitiesSamsungPayPayments, ?satispayPayments: Update'CapabilitiesSatispayPayments, ?scalapayPayments: Update'CapabilitiesScalapayPayments, ?sepaBankTransferPayments: Update'CapabilitiesSepaBankTransferPayments, ?sepaDebitPayments: Update'CapabilitiesSepaDebitPayments, ?sofortPayments: Update'CapabilitiesSofortPayments, ?sunbitPayments: Update'CapabilitiesSunbitPayments, ?swishPayments: Update'CapabilitiesSwishPayments, ?taxReportingUs1099K: Update'CapabilitiesTaxReportingUs1099K, ?taxReportingUs1099Misc: Update'CapabilitiesTaxReportingUs1099Misc, ?transfers: Update'CapabilitiesTransfers, ?treasury: Update'CapabilitiesTreasury, ?twintPayments: Update'CapabilitiesTwintPayments, ?upiPayments: Update'CapabilitiesUpiPayments, ?usBankAccountAchPayments: Update'CapabilitiesUsBankAccountAchPayments, ?usBankTransferPayments: Update'CapabilitiesUsBankTransferPayments, ?zipPayments: Update'CapabilitiesZipPayments) =
+        static member New(?acssDebitPayments: Update'CapabilitiesAcssDebitPayments, ?affirmPayments: Update'CapabilitiesAffirmPayments, ?afterpayClearpayPayments: Update'CapabilitiesAfterpayClearpayPayments, ?almaPayments: Update'CapabilitiesAlmaPayments, ?amazonPayPayments: Update'CapabilitiesAmazonPayPayments, ?appDistribution: Update'CapabilitiesAppDistribution, ?auBecsDebitPayments: Update'CapabilitiesAuBecsDebitPayments, ?bacsDebitPayments: Update'CapabilitiesBacsDebitPayments, ?bancontactPayments: Update'CapabilitiesBancontactPayments, ?bankTransferPayments: Update'CapabilitiesBankTransferPayments, ?billiePayments: Update'CapabilitiesBilliePayments, ?bizumPayments: Update'CapabilitiesBizumPayments, ?blikPayments: Update'CapabilitiesBlikPayments, ?blikRecurringPayments: Update'CapabilitiesBlikRecurringPayments, ?boletoPayments: Update'CapabilitiesBoletoPayments, ?cardIssuing: Update'CapabilitiesCardIssuing, ?cardPayments: Update'CapabilitiesCardPayments, ?cartesBancairesPayments: Update'CapabilitiesCartesBancairesPayments, ?cashappPayments: Update'CapabilitiesCashappPayments, ?cryptoPayments: Update'CapabilitiesCryptoPayments, ?epsPayments: Update'CapabilitiesEpsPayments, ?fpxPayments: Update'CapabilitiesFpxPayments, ?gbBankTransferPayments: Update'CapabilitiesGbBankTransferPayments, ?giropayPayments: Update'CapabilitiesGiropayPayments, ?grabpayPayments: Update'CapabilitiesGrabpayPayments, ?idealPayments: Update'CapabilitiesIdealPayments, ?indiaInternationalPayments: Update'CapabilitiesIndiaInternationalPayments, ?jcbPayments: Update'CapabilitiesJcbPayments, ?jpBankTransferPayments: Update'CapabilitiesJpBankTransferPayments, ?kakaoPayPayments: Update'CapabilitiesKakaoPayPayments, ?klarnaPayments: Update'CapabilitiesKlarnaPayments, ?konbiniPayments: Update'CapabilitiesKonbiniPayments, ?krCardPayments: Update'CapabilitiesKrCardPayments, ?legacyPayments: Update'CapabilitiesLegacyPayments, ?linkPayments: Update'CapabilitiesLinkPayments, ?mbWayPayments: Update'CapabilitiesMbWayPayments, ?mobilepayPayments: Update'CapabilitiesMobilepayPayments, ?multibancoPayments: Update'CapabilitiesMultibancoPayments, ?mxBankTransferPayments: Update'CapabilitiesMxBankTransferPayments, ?naverPayPayments: Update'CapabilitiesNaverPayPayments, ?nzBankAccountBecsDebitPayments: Update'CapabilitiesNzBankAccountBecsDebitPayments, ?oxxoPayments: Update'CapabilitiesOxxoPayments, ?p24Payments: Update'CapabilitiesP24Payments, ?payByBankPayments: Update'CapabilitiesPayByBankPayments, ?paycoPayments: Update'CapabilitiesPaycoPayments, ?paynowPayments: Update'CapabilitiesPaynowPayments, ?paypayPayments: Update'CapabilitiesPaypayPayments, ?paytoPayments: Update'CapabilitiesPaytoPayments, ?pixPayments: Update'CapabilitiesPixPayments, ?promptpayPayments: Update'CapabilitiesPromptpayPayments, ?revolutPayPayments: Update'CapabilitiesRevolutPayPayments, ?samsungPayPayments: Update'CapabilitiesSamsungPayPayments, ?satispayPayments: Update'CapabilitiesSatispayPayments, ?scalapayPayments: Update'CapabilitiesScalapayPayments, ?sepaBankTransferPayments: Update'CapabilitiesSepaBankTransferPayments, ?sepaDebitPayments: Update'CapabilitiesSepaDebitPayments, ?sequraPayments: Update'CapabilitiesSequraPayments, ?sofortPayments: Update'CapabilitiesSofortPayments, ?sunbitPayments: Update'CapabilitiesSunbitPayments, ?swishPayments: Update'CapabilitiesSwishPayments, ?taxReportingUs1099K: Update'CapabilitiesTaxReportingUs1099K, ?taxReportingUs1099Misc: Update'CapabilitiesTaxReportingUs1099Misc, ?transfers: Update'CapabilitiesTransfers, ?treasury: Update'CapabilitiesTreasury, ?twintPayments: Update'CapabilitiesTwintPayments, ?upiPayments: Update'CapabilitiesUpiPayments, ?usBankAccountAchPayments: Update'CapabilitiesUsBankAccountAchPayments, ?usBankTransferPayments: Update'CapabilitiesUsBankTransferPayments, ?zipPayments: Update'CapabilitiesZipPayments) =
             {
                 AcssDebitPayments = acssDebitPayments
                 AffirmPayments = affirmPayments
@@ -3964,6 +4218,7 @@ module Accounts =
                 BilliePayments = billiePayments
                 BizumPayments = bizumPayments
                 BlikPayments = blikPayments
+                BlikRecurringPayments = blikRecurringPayments
                 BoletoPayments = boletoPayments
                 CardIssuing = cardIssuing
                 CardPayments = cardPayments
@@ -3996,6 +4251,7 @@ module Accounts =
                 PayByBankPayments = payByBankPayments
                 PaycoPayments = paycoPayments
                 PaynowPayments = paynowPayments
+                PaypayPayments = paypayPayments
                 PaytoPayments = paytoPayments
                 PixPayments = pixPayments
                 PromptpayPayments = promptpayPayments
@@ -4005,6 +4261,7 @@ module Accounts =
                 ScalapayPayments = scalapayPayments
                 SepaBankTransferPayments = sepaBankTransferPayments
                 SepaDebitPayments = sepaDebitPayments
+                SequraPayments = sequraPayments
                 SofortPayments = sofortPayments
                 SunbitPayments = sunbitPayments
                 SwishPayments = swishPayments
@@ -4126,6 +4383,39 @@ module Accounts =
                 Town = town
             }
 
+    type Update'CompanyAdministrativeAddress =
+        {
+            /// City, district, suburb, town, or village.
+            [<Config.Form>]
+            City: string option
+            /// Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+            [<Config.Form>]
+            Country: IsoTypes.IsoCountryCode option
+            /// Address line 1, such as the street, PO Box, or company name.
+            [<Config.Form>]
+            Line1: string option
+            /// Address line 2, such as the apartment, suite, unit, or building.
+            [<Config.Form>]
+            Line2: string option
+            /// ZIP or postal code.
+            [<Config.Form>]
+            PostalCode: string option
+            /// State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+            [<Config.Form>]
+            State: string option
+        }
+
+    type Update'CompanyAdministrativeAddress with
+        static member New(?city: string, ?country: IsoTypes.IsoCountryCode, ?line1: string, ?line2: string, ?postalCode: string, ?state: string) =
+            {
+                City = city
+                Country = country
+                Line1 = line1
+                Line2 = line2
+                PostalCode = postalCode
+                State = state
+            }
+
     type Update'CompanyDirectorshipDeclaration =
         {
             /// The Unix timestamp marking when the directorship declaration attestation was made.
@@ -4171,6 +4461,39 @@ module Accounts =
     type Update'CompanyOwnershipExemptionReason =
         | QualifiedEntityExceedsOwnershipThreshold
         | QualifiesAsFinancialInstitution
+
+    type Update'CompanyPrincipalPlaceOfBusiness =
+        {
+            /// City, district, suburb, town, or village.
+            [<Config.Form>]
+            City: string option
+            /// Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+            [<Config.Form>]
+            Country: IsoTypes.IsoCountryCode option
+            /// Address line 1, such as the street, PO Box, or company name.
+            [<Config.Form>]
+            Line1: string option
+            /// Address line 2, such as the apartment, suite, unit, or building.
+            [<Config.Form>]
+            Line2: string option
+            /// ZIP or postal code.
+            [<Config.Form>]
+            PostalCode: string option
+            /// State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+            [<Config.Form>]
+            State: string option
+        }
+
+    type Update'CompanyPrincipalPlaceOfBusiness with
+        static member New(?city: string, ?country: IsoTypes.IsoCountryCode, ?line1: string, ?line2: string, ?postalCode: string, ?state: string) =
+            {
+                City = city
+                Country = country
+                Line1 = line1
+                Line2 = line2
+                PostalCode = postalCode
+                State = state
+            }
 
     type Update'CompanyRegistrationDateRegistrationDateSpecs =
         {
@@ -4241,10 +4564,10 @@ module Accounts =
 
     type Update'CompanyVerificationDocument =
         {
-            /// The back of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of a document returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of a document returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -4280,6 +4603,9 @@ module Accounts =
             /// The Kanji variation of the company's primary address (Japan only).
             [<Config.Form>]
             AddressKanji: Update'CompanyAddressKanji option
+            /// The location where the business is administered.
+            [<Config.Form>]
+            AdministrativeAddress: Update'CompanyAdministrativeAddress option
             /// Whether the company's directors have been provided. Set this Boolean to `true` after creating all the company's directors with [the Persons API](/api/persons) for accounts with a `relationship.director` requirement. This value is not automatically set to `true` after creating directors, so it needs to be updated to indicate all directors have been provided.
             [<Config.Form>]
             DirectorsProvided: bool option
@@ -4316,6 +4642,9 @@ module Accounts =
             /// The company's phone number (used for verification).
             [<Config.Form>]
             Phone: string option
+            /// The primary location where the business conducts operations.
+            [<Config.Form>]
+            PrincipalPlaceOfBusiness: Update'CompanyPrincipalPlaceOfBusiness option
             [<Config.Form>]
             RegistrationDate: Choice<Update'CompanyRegistrationDateRegistrationDateSpecs,string> option
             /// The identification number given to a company when it is registered or incorporated, if distinct from the identification number used for filing taxes. (Examples are the CIN for companies and LLP IN for partnerships in India, and the Company Registration Number in Hong Kong).
@@ -4328,6 +4657,7 @@ module Accounts =
             [<Config.Form>]
             Structure: Update'CompanyStructure option
             /// The business ID number of the company, as appropriate for the company’s country. (Examples are an Employer ID Number in the U.S., a Business Number in Canada, or a Company Number in the UK.)
+            /// Changing this value requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             TaxId: string option
             /// The jurisdiction in which the `tax_id` is registered (Germany-based companies only).
@@ -4342,11 +4672,12 @@ module Accounts =
         }
 
     type Update'Company with
-        static member New(?address: Update'CompanyAddress, ?addressKana: Update'CompanyAddressKana, ?addressKanji: Update'CompanyAddressKanji, ?directorsProvided: bool, ?directorshipDeclaration: Update'CompanyDirectorshipDeclaration, ?executivesProvided: bool, ?exportLicenseId: string, ?exportPurposeCode: string, ?name: string, ?nameKana: string, ?nameKanji: string, ?ownersProvided: bool, ?ownershipDeclaration: Update'CompanyOwnershipDeclaration, ?ownershipExemptionReason: Update'CompanyOwnershipExemptionReason, ?phone: string, ?registrationDate: Choice<Update'CompanyRegistrationDateRegistrationDateSpecs,string>, ?registrationNumber: string, ?representativeDeclaration: Update'CompanyRepresentativeDeclaration, ?structure: Update'CompanyStructure, ?taxId: string, ?taxIdRegistrar: string, ?vatId: string, ?verification: Update'CompanyVerification) =
+        static member New(?address: Update'CompanyAddress, ?addressKana: Update'CompanyAddressKana, ?addressKanji: Update'CompanyAddressKanji, ?administrativeAddress: Update'CompanyAdministrativeAddress, ?directorsProvided: bool, ?directorshipDeclaration: Update'CompanyDirectorshipDeclaration, ?executivesProvided: bool, ?exportLicenseId: string, ?exportPurposeCode: string, ?name: string, ?nameKana: string, ?nameKanji: string, ?ownersProvided: bool, ?ownershipDeclaration: Update'CompanyOwnershipDeclaration, ?ownershipExemptionReason: Update'CompanyOwnershipExemptionReason, ?phone: string, ?principalPlaceOfBusiness: Update'CompanyPrincipalPlaceOfBusiness, ?registrationDate: Choice<Update'CompanyRegistrationDateRegistrationDateSpecs,string>, ?registrationNumber: string, ?representativeDeclaration: Update'CompanyRepresentativeDeclaration, ?structure: Update'CompanyStructure, ?taxId: string, ?taxIdRegistrar: string, ?vatId: string, ?verification: Update'CompanyVerification) =
             {
                 Address = address
                 AddressKana = addressKana
                 AddressKanji = addressKanji
+                AdministrativeAddress = administrativeAddress
                 DirectorsProvided = directorsProvided
                 DirectorshipDeclaration = directorshipDeclaration
                 ExecutivesProvided = executivesProvided
@@ -4359,6 +4690,7 @@ module Accounts =
                 OwnershipDeclaration = ownershipDeclaration
                 OwnershipExemptionReason = ownershipExemptionReason
                 Phone = phone
+                PrincipalPlaceOfBusiness = principalPlaceOfBusiness
                 RegistrationDate = registrationDate
                 RegistrationNumber = registrationNumber
                 RepresentativeDeclaration = representativeDeclaration
@@ -4371,7 +4703,7 @@ module Accounts =
 
     type Update'DocumentsBankAccountOwnershipVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4384,7 +4716,7 @@ module Accounts =
 
     type Update'DocumentsCompanyLicense =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4397,7 +4729,7 @@ module Accounts =
 
     type Update'DocumentsCompanyMemorandumOfAssociation =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4410,7 +4742,7 @@ module Accounts =
 
     type Update'DocumentsCompanyMinisterialDecree =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4423,7 +4755,7 @@ module Accounts =
 
     type Update'DocumentsCompanyRegistrationVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4436,7 +4768,7 @@ module Accounts =
 
     type Update'DocumentsCompanyTaxIdVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4449,7 +4781,7 @@ module Accounts =
 
     type Update'DocumentsProofOfAddress =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -4475,7 +4807,7 @@ module Accounts =
 
     type Update'DocumentsProofOfRegistration =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
             /// Information regarding the person signing the document if applicable.
@@ -4505,7 +4837,7 @@ module Accounts =
 
     type Update'DocumentsProofOfUltimateBeneficialOwnership =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
             /// Information regarding the person signing the document if applicable.
@@ -4774,10 +5106,10 @@ module Accounts =
 
     type Update'IndividualVerificationAdditionalDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -4791,10 +5123,10 @@ module Accounts =
 
     type Update'IndividualVerificationDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -5159,6 +5491,104 @@ module Accounts =
                 StatementDescriptor = statementDescriptor
             }
 
+    type Update'SettingsPaypayPaymentsGoodsType =
+        | DigitalContent
+        | Other
+
+    type Update'SettingsPaypayPaymentsSiteInDevelopment =
+        {
+            /// The password needed to access your business's website.
+            [<Config.Form>]
+            Password: string option
+            /// The username needed to access your business's website.
+            [<Config.Form>]
+            Username: string option
+        }
+
+    type Update'SettingsPaypayPaymentsSiteInDevelopment with
+        static member New(?password: string, ?username: string) =
+            {
+                Password = password
+                Username = username
+            }
+
+    type Update'SettingsPaypayPaymentsSiteRestricted =
+        {
+            /// The file explaining the payment flow for your business.
+            [<Config.Form>]
+            PaymentFlowFile: string option
+        }
+
+    type Update'SettingsPaypayPaymentsSiteRestricted with
+        static member New(?paymentFlowFile: string) =
+            {
+                PaymentFlowFile = paymentFlowFile
+            }
+
+    type Update'SettingsPaypayPaymentsSiteType =
+        | Accessible
+        | InDevelopment
+        | Restricted
+
+    type Update'SettingsPaypayPaymentsSite =
+        {
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            Accessible: string option
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            InDevelopment: Update'SettingsPaypayPaymentsSiteInDevelopment option
+            /// Additional information about your business's website.
+            [<Config.Form>]
+            Restricted: Update'SettingsPaypayPaymentsSiteRestricted option
+            /// The status of your business's website.
+            [<Config.Form>]
+            Type: Update'SettingsPaypayPaymentsSiteType option
+        }
+
+    type Update'SettingsPaypayPaymentsSite with
+        static member New(?accessible: string, ?inDevelopment: Update'SettingsPaypayPaymentsSiteInDevelopment, ?restricted: Update'SettingsPaypayPaymentsSiteRestricted, ?type': Update'SettingsPaypayPaymentsSiteType) =
+            {
+                Accessible = accessible
+                InDevelopment = inDevelopment
+                Restricted = restricted
+                Type = type'
+            }
+
+    type Update'SettingsPaypayPayments =
+        {
+            /// Additional files that are required to support the onboarding process of your business.
+            [<Config.Form>]
+            AdditionalFiles: string list option
+            /// The type of goods your business sells. Use `digital_content` if you sell digital content. Use `other` for all other types of goods or services.
+            [<Config.Form>]
+            GoodsType: Update'SettingsPaypayPaymentsGoodsType option
+            /// Details regarding your business's website.
+            [<Config.Form>]
+            Site: Update'SettingsPaypayPaymentsSite option
+        }
+
+    type Update'SettingsPaypayPayments with
+        static member New(?additionalFiles: string list, ?goodsType: Update'SettingsPaypayPaymentsGoodsType, ?site: Update'SettingsPaypayPaymentsSite) =
+            {
+                AdditionalFiles = additionalFiles
+                GoodsType = goodsType
+                Site = site
+            }
+
+    type Update'SettingsSepaDebitPayments =
+        {
+            /// The business creditor id for european payments.
+            [<Config.Form>]
+            CreditorId: string option
+        }
+
+    type Update'SettingsSepaDebitPayments with
+        static member New(?creditorId: string) =
+            {
+                CreditorId = creditorId
+            }
+
     type Update'SettingsTreasuryTosAcceptance =
         {
             /// The Unix timestamp marking when the account representative accepted the service agreement.
@@ -5216,13 +5646,19 @@ module Accounts =
             /// Settings specific to the account's payouts.
             [<Config.Form>]
             Payouts: Update'SettingsPayouts option
+            /// Settings specific to the PayPay payments method.
+            [<Config.Form>]
+            PaypayPayments: Update'SettingsPaypayPayments option
+            /// Settings specific to SEPA Direct Debit payments.
+            [<Config.Form>]
+            SepaDebitPayments: Update'SettingsSepaDebitPayments option
             /// Settings specific to the account's Treasury FinancialAccounts.
             [<Config.Form>]
             Treasury: Update'SettingsTreasury option
         }
 
     type Update'Settings with
-        static member New(?bacsDebitPayments: Update'SettingsBacsDebitPayments, ?branding: Update'SettingsBranding, ?cardIssuing: Update'SettingsCardIssuing, ?cardPayments: Update'SettingsCardPayments, ?invoices: Update'SettingsInvoices, ?payments: Update'SettingsPayments, ?payouts: Update'SettingsPayouts, ?treasury: Update'SettingsTreasury) =
+        static member New(?bacsDebitPayments: Update'SettingsBacsDebitPayments, ?branding: Update'SettingsBranding, ?cardIssuing: Update'SettingsCardIssuing, ?cardPayments: Update'SettingsCardPayments, ?invoices: Update'SettingsInvoices, ?payments: Update'SettingsPayments, ?payouts: Update'SettingsPayouts, ?paypayPayments: Update'SettingsPaypayPayments, ?sepaDebitPayments: Update'SettingsSepaDebitPayments, ?treasury: Update'SettingsTreasury) =
             {
                 BacsDebitPayments = bacsDebitPayments
                 Branding = branding
@@ -5231,6 +5667,8 @@ module Accounts =
                 Invoices = invoices
                 Payments = payments
                 Payouts = payouts
+                PaypayPayments = paypayPayments
+                SepaDebitPayments = sepaDebitPayments
                 Treasury = treasury
             }
 
@@ -5263,7 +5701,7 @@ module Accounts =
         {
             [<Config.Path>]
             Account: string
-            /// An [account token](https://api.stripe.com#create_account_token), used to securely provide details to the account.
+            /// An [account token](https://docs.stripe.com/api#create_account_token), used to securely provide details to the account.
             [<Config.Form>]
             AccountToken: string option
             /// Business information about the account.
@@ -5345,7 +5783,7 @@ module Accounts =
 
     ///<p>With <a href="/docs/connect">Connect</a>, you can create Stripe accounts for your users.
     ///To do this, you’ll first need to <a href="https://dashboard.stripe.com/account/applications/settings">register your platform</a>.</p>
-    ///<p>If you’ve already collected information for your connected accounts, you <a href="/docs/connect/best-practices#onboarding">can prefill that information</a> when
+    ///<p>If you’ve already collected information for your connected accounts, you <a href="/connect/marketplace/tasks/create#prefill-account-information">can prefill that information</a> when
     ///creating the account. Connect Onboarding won’t ask for the prefilled information during account onboarding.
     ///You can prefill any information on the account.</p>
     let Create settings (options: CreateOptions) =
@@ -5568,7 +6006,7 @@ module AccountsExternalAccounts =
 
     type Update'DocumentsBankAccountOwnershipVerification =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: string list option
         }
@@ -5925,7 +6363,7 @@ module AccountsPersons =
 
     type Create'DocumentsCompanyAuthorization =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -5938,7 +6376,7 @@ module AccountsPersons =
 
     type Create'DocumentsPassport =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -5951,7 +6389,7 @@ module AccountsPersons =
 
     type Create'DocumentsVisa =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -6153,10 +6591,10 @@ module AccountsPersons =
 
     type Create'VerificationAdditionalDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -6170,10 +6608,10 @@ module AccountsPersons =
 
     type Create'VerificationDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -6246,9 +6684,11 @@ module AccountsPersons =
             [<Config.Form>]
             Gender: string option
             /// The person's ID number, as appropriate for their country. For example, a social security number in the U.S., social insurance number in Canada, etc. Instead of the number itself, you can also provide a [PII token provided by Stripe.js](https://docs.stripe.com/js/tokens/create_token?type=pii).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             IdNumber: string option
             /// The person's secondary ID number, as appropriate for their country, will be used for enhanced verification checks. In Thailand, this would be the laser code found on the back of an ID card. Instead of the number itself, you can also provide a [PII token provided by Stripe.js](https://docs.stripe.com/js/tokens/create_token?type=pii).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             IdNumberSecondary: string option
             /// The person's last name.
@@ -6285,6 +6725,7 @@ module AccountsPersons =
             [<Config.Form>]
             Relationship: Create'Relationship option
             /// The last four digits of the person's Social Security number (U.S. only).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             SsnLast4: string option
             /// Demographic data related to the person.
@@ -6526,7 +6967,7 @@ module AccountsPersons =
 
     type Update'DocumentsCompanyAuthorization =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -6539,7 +6980,7 @@ module AccountsPersons =
 
     type Update'DocumentsPassport =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -6552,7 +6993,7 @@ module AccountsPersons =
 
     type Update'DocumentsVisa =
         {
-            /// One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `account_requirement`.
+            /// One or more document ids returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `account_requirement`.
             [<Config.Form>]
             Files: Choice<string,string> list option
         }
@@ -6754,10 +7195,10 @@ module AccountsPersons =
 
     type Update'VerificationAdditionalDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -6771,10 +7212,10 @@ module AccountsPersons =
 
     type Update'VerificationDocument =
         {
-            /// The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The back of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Back: string option
-            /// The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+            /// The front of an ID returned by a [file upload](https://docs.stripe.com/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
             [<Config.Form>]
             Front: string option
         }
@@ -6849,9 +7290,11 @@ module AccountsPersons =
             [<Config.Form>]
             Gender: string option
             /// The person's ID number, as appropriate for their country. For example, a social security number in the U.S., social insurance number in Canada, etc. Instead of the number itself, you can also provide a [PII token provided by Stripe.js](https://docs.stripe.com/js/tokens/create_token?type=pii).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             IdNumber: string option
             /// The person's secondary ID number, as appropriate for their country, will be used for enhanced verification checks. In Thailand, this would be the laser code found on the back of an ID card. Instead of the number itself, you can also provide a [PII token provided by Stripe.js](https://docs.stripe.com/js/tokens/create_token?type=pii).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             IdNumberSecondary: string option
             /// The person's last name.
@@ -6888,6 +7331,7 @@ module AccountsPersons =
             [<Config.Form>]
             Relationship: Update'Relationship option
             /// The last four digits of the person's Social Security number (U.S. only).
+            /// Changing this value for the account's representative requires that the account re-accept the [terms of service](/api/accounts/object#account_object-tos_acceptance).
             [<Config.Form>]
             SsnLast4: string option
             /// Demographic data related to the person.
@@ -6945,7 +7389,7 @@ module AccountsPersons =
         $"/v1/accounts/{options.Account}/persons"
         |> RestApi.postAsync<_, Person> settings (Map.empty) options
 
-    ///<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>
+    ///<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>representative</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>
     let Delete settings (options: DeleteOptions) =
         $"/v1/accounts/{options.Account}/persons/{options.Person}"
         |> RestApi.deleteAsync<DeletedPerson> settings (Map.empty)
@@ -6963,6 +7407,19 @@ module AccountsPersons =
 
 module AccountsReject =
 
+    type Reject'PayoutsAction =
+        | [<JsonPropertyName("none")>] None'
+        | Pause
+
+    type Reject'Reason =
+        | Credit
+        | FraudNoIntentToFulfill
+        | FraudOther
+        | FraudPaymentMethodCasher
+        | FraudPaymentMethodTester
+        | Other
+        | TermsOfService
+
     type RejectOptions =
         {
             [<Config.Path>]
@@ -6970,22 +7427,51 @@ module AccountsReject =
             /// Specifies which fields in the response should be expanded.
             [<Config.Form>]
             Expand: string list option
-            /// The reason for rejecting the account. Can be `fraud`, `terms_of_service`, or `other`.
+            /// Whether to pause payouts on the account as part of the rejection. Defaults to `pause`. Use `none` to leave payouts enabled.
             [<Config.Form>]
-            Reason: string
+            PayoutsAction: Reject'PayoutsAction option
+            /// The reason for rejecting the account. Can be `fraud_payment_method_casher`, `fraud_payment_method_tester`, `fraud_no_intent_to_fulfill`, `fraud_other`, `credit`, `terms_of_service`, or `other`.
+            [<Config.Form>]
+            Reason: Reject'Reason
         }
 
     type RejectOptions with
-        static member New(account: string, reason: string, ?expand: string list) =
+        static member New(account: string, reason: Reject'Reason, ?expand: string list, ?payoutsAction: Reject'PayoutsAction) =
             {
                 Account = account
                 Reason = reason
                 Expand = expand
+                PayoutsAction = payoutsAction
             }
 
     ///<p>With <a href="/connect">Connect</a>, you can reject accounts that you have flagged as suspicious.</p>
-    ///<p>Only accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be rejected. Test-mode accounts can be rejected at any time. Live-mode accounts can only be rejected after all balances are zero.</p>
+    ///<p>Only accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be rejected.</p>
     let Reject settings (options: RejectOptions) =
         $"/v1/accounts/{options.Account}/reject"
+        |> RestApi.postAsync<_, Account> settings (Map.empty) options
+
+module AccountsUnreject =
+
+    type UnrejectOptions =
+        {
+            [<Config.Path>]
+            Account: string
+            /// Specifies which fields in the response should be expanded.
+            [<Config.Form>]
+            Expand: string list option
+        }
+
+    type UnrejectOptions with
+        static member New(account: string, ?expand: string list) =
+            {
+                Account = account
+                Expand = expand
+            }
+
+    ///<p>With Connect, you can unreject accounts that you have previously rejected.</p>
+    ///<p>Only accounts that were rejected by your platform can be unrejected. This API cannot be used to unreject accounts that were rejected by Stripe.</p>
+    ///<p>Unreject will only enable charges and/or payouts if there are no other restrictions other than those placed by a previous rejection. If you have separately paused charges and/or payouts outside of rejection, those pauses will remain in place after unrejection.</p>
+    let Unreject settings (options: UnrejectOptions) =
+        $"/v1/accounts/{options.Account}/unreject"
         |> RestApi.postAsync<_, Account> settings (Map.empty) options
 
