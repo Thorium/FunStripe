@@ -6,7 +6,7 @@ open Stripe.Checkout
 open Stripe.PaymentMethod
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module CheckoutSessions =
 
     type ListOptions =
@@ -110,6 +110,64 @@ module CheckoutSessions =
             {
                 Recovery = recovery
             }
+
+    type Create'AllowedPaymentMethodTypes =
+        | AcssDebit
+        | Affirm
+        | AfterpayClearpay
+        | Alipay
+        | Alma
+        | AmazonPay
+        | AuBecsDebit
+        | BacsDebit
+        | Bancontact
+        | Billie
+        | Bizum
+        | Blik
+        | Boleto
+        | Card
+        | Cashapp
+        | Crypto
+        | CustomerBalance
+        | Eps
+        | Fpx
+        | Giropay
+        | Grabpay
+        | Ideal
+        | KakaoPay
+        | Klarna
+        | Konbini
+        | KrCard
+        | Link
+        | MbWay
+        | Mobilepay
+        | Multibanco
+        | NaverPay
+        | NzBankAccount
+        | Oxxo
+        | [<JsonPropertyName("p24")>] P24
+        | PayByBank
+        | Payco
+        | Paynow
+        | Paypal
+        | Paypay
+        | Payto
+        | Pix
+        | Promptpay
+        | RevolutPay
+        | SamsungPay
+        | Satispay
+        | Scalapay
+        | SepaDebit
+        | Sequra
+        | Sofort
+        | Sunbit
+        | Swish
+        | Twint
+        | Upi
+        | UsBankAccount
+        | WechatPay
+        | Zip
 
     type Create'AutomaticTaxLiabilityType =
         | Account
@@ -343,7 +401,7 @@ module CheckoutSessions =
 
     type Create'CustomFieldsDropdown =
         {
-            /// The value that pre-fills the field on the payment page.Must match a `value` in the `options` array.
+            /// The value that pre-fills the field on the payment page. Must match a `value` in the `options` array.
             [<Config.Form>]
             DefaultValue: string option
             /// The options available for the customer to select. Up to 200 options allowed.
@@ -362,7 +420,7 @@ module CheckoutSessions =
 
     type Create'CustomFieldsLabel =
         {
-            /// Custom text for the label, displayed to the customer. Up to 50 characters.
+            /// Custom text for the label, displayed to the customer. Up to 100 characters.
             [<Config.Form>]
             Custom: string option
             /// The type of the label.
@@ -632,6 +690,7 @@ module CheckoutSessions =
         | Payco
         | Paynow
         | Paypal
+        | Paypay
         | Payto
         | Pix
         | Promptpay
@@ -640,6 +699,7 @@ module CheckoutSessions =
         | Satispay
         | Scalapay
         | SepaDebit
+        | Sequra
         | Sofort
         | Sunbit
         | Swish
@@ -785,6 +845,23 @@ module CheckoutSessions =
                 Minimum = minimum
             }
 
+    type Create'LineItemsPriceDataProductDataTaxDetails =
+        {
+            /// A tax location ID. Depending on the [tax code](/tax/tax-for-tickets/reference/tax-location-performance), this is required, optional, or not supported.
+            [<Config.Form>]
+            PerformanceLocation: string option
+            /// A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
+            [<Config.Form>]
+            TaxCode: Choice<string,string> option
+        }
+
+    type Create'LineItemsPriceDataProductDataTaxDetails with
+        static member New(?performanceLocation: string, ?taxCode: Choice<string,string>) =
+            {
+                PerformanceLocation = performanceLocation
+                TaxCode = taxCode
+            }
+
     type Create'LineItemsPriceDataProductData =
         {
             /// The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
@@ -802,19 +879,23 @@ module CheckoutSessions =
             /// A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
             [<Config.Form>]
             TaxCode: string option
+            /// Tax details for this product, including the [tax code](/tax/tax-codes) and an optional performance location.
+            [<Config.Form>]
+            TaxDetails: Create'LineItemsPriceDataProductDataTaxDetails option
             /// A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
             [<Config.Form>]
             UnitLabel: string option
         }
 
     type Create'LineItemsPriceDataProductData with
-        static member New(?description: string, ?images: string list, ?metadata: Map<string, string>, ?name: string, ?taxCode: string, ?unitLabel: string) =
+        static member New(?description: string, ?images: string list, ?metadata: Map<string, string>, ?name: string, ?taxCode: string, ?taxDetails: Create'LineItemsPriceDataProductDataTaxDetails, ?unitLabel: string) =
             {
                 Description = description
                 Images = images
                 Metadata = metadata
                 Name = name
                 TaxCode = taxCode
+                TaxDetails = taxDetails
                 UnitLabel = unitLabel
             }
 
@@ -888,9 +969,6 @@ module CheckoutSessions =
             /// When set, provides configuration for this item’s quantity to be adjusted by the customer during Checkout.
             [<Config.Form>]
             AdjustableQuantity: Create'LineItemsAdjustableQuantity option
-            /// The [tax rates](https://docs.stripe.com/api/tax_rates) that will be applied to this line item depending on the customer's billing/shipping address. We currently support the following countries: US, GB, AU, and all countries in the EU. You can't set this parameter if `ui_mode` is `custom`.
-            [<Config.Form>]
-            DynamicTaxRates: string list option
             /// Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
             [<Config.Form>]
             Metadata: Map<string, string> option
@@ -909,10 +987,9 @@ module CheckoutSessions =
         }
 
     type Create'LineItems with
-        static member New(?adjustableQuantity: Create'LineItemsAdjustableQuantity, ?dynamicTaxRates: string list, ?metadata: Map<string, string>, ?price: string, ?priceData: Create'LineItemsPriceData, ?quantity: int, ?taxRates: string list) =
+        static member New(?adjustableQuantity: Create'LineItemsAdjustableQuantity, ?metadata: Map<string, string>, ?price: string, ?priceData: Create'LineItemsPriceData, ?quantity: int, ?taxRates: string list) =
             {
                 AdjustableQuantity = adjustableQuantity
-                DynamicTaxRates = dynamicTaxRates
                 Metadata = metadata
                 Price = price
                 PriceData = priceData
@@ -1191,21 +1268,12 @@ module CheckoutSessions =
             /// Email address that the receipt for the resulting payment will be sent to. If `receipt_email` is specified for a payment in live mode, a receipt will be sent regardless of your [email settings](https://dashboard.stripe.com/account/emails).
             [<Config.Form>]
             ReceiptEmail: string option
-            /// Indicates that you intend to [make future payments](https://docs.stripe.com/payments/payment-intents#future-usage) with the payment
-            /// method collected by this Checkout Session.
-            /// When setting this to `on_session`, Checkout will show a notice to the
-            /// customer that their payment details will be saved.
-            /// When setting this to `off_session`, Checkout will show a notice to the
-            /// customer that their payment details will be saved and used for future
-            /// payments.
-            /// If a Customer has been provided or Checkout creates a new Customer,
-            /// Checkout will attach the payment method to the Customer.
-            /// If Checkout does not create a Customer, the payment method is not attached
-            /// to a Customer. To reuse the payment method, you can retrieve it from the
-            /// Checkout Session's PaymentIntent.
-            /// When processing card payments, Checkout also uses `setup_future_usage`
-            /// to dynamically optimize your payment flow and comply with regional
-            /// legislation and network rules, such as SCA.
+            /// Indicates that you intend to [make future payments](https://docs.stripe.com/payments/payment-intents#future-usage) with the payment method collected by this Checkout Session.
+            /// When setting this to `on_session`, Checkout will show a notice to the customer that their payment details will be saved.
+            /// When setting this to `off_session`, Checkout will show a notice to the customer that their payment details will be saved and used for future payments.
+            /// If a Customer has been provided or Checkout creates a new Customer, Checkout will attach the payment method to the Customer.
+            /// If Checkout does not create a Customer, the payment method is not attached to a Customer. To reuse the payment method, you can retrieve it from the Checkout Session's PaymentIntent.
+            /// When processing card payments, Checkout also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as SCA.
             [<Config.Form>]
             SetupFutureUsage: Create'PaymentIntentDataSetupFutureUsage option
             /// Shipping information for this payment.
@@ -1527,7 +1595,9 @@ module CheckoutSessions =
                 TargetDate = targetDate
             }
 
-    type Create'PaymentMethodOptionsBancontactSetupFutureUsage = | [<JsonPropertyName("none")>] None'
+    type Create'PaymentMethodOptionsBancontactSetupFutureUsage =
+        | [<JsonPropertyName("none")>] None'
+        | OffSession
 
     type Create'PaymentMethodOptionsBancontact =
         {
@@ -1558,6 +1628,39 @@ module CheckoutSessions =
         static member New(?captureMethod: Create'PaymentMethodOptionsBillieCaptureMethod) =
             {
                 CaptureMethod = captureMethod
+            }
+
+    type Create'PaymentMethodOptionsBlikMandateOptions =
+        {
+            /// Date when the mandate expires and no further payments will be charged. If not provided, the mandate will be set to be indefinite.
+            [<Config.Form>]
+            ExpiresAt: DateTime option
+        }
+
+    type Create'PaymentMethodOptionsBlikMandateOptions with
+        static member New(?expiresAt: DateTime) =
+            {
+                ExpiresAt = expiresAt
+            }
+
+    type Create'PaymentMethodOptionsBlikSetupFutureUsage =
+        | [<JsonPropertyName("none")>] None'
+        | OffSession
+
+    type Create'PaymentMethodOptionsBlik =
+        {
+            /// Additional fields for Mandate creation
+            [<Config.Form>]
+            MandateOptions: Create'PaymentMethodOptionsBlikMandateOptions option
+            [<Config.Form>]
+            SetupFutureUsage: Create'PaymentMethodOptionsBlikSetupFutureUsage option
+        }
+
+    type Create'PaymentMethodOptionsBlik with
+        static member New(?mandateOptions: Create'PaymentMethodOptionsBlikMandateOptions, ?setupFutureUsage: Create'PaymentMethodOptionsBlikSetupFutureUsage) =
+            {
+                MandateOptions = mandateOptions
+                SetupFutureUsage = setupFutureUsage
             }
 
     type Create'PaymentMethodOptionsBoletoSetupFutureUsage =
@@ -1628,17 +1731,26 @@ module CheckoutSessions =
         | Mastercard
         | Visa
 
+    type Create'PaymentMethodOptionsCardRestrictionsFundingTypesBlocked =
+        | Credit
+        | Debit
+        | Prepaid
+
     type Create'PaymentMethodOptionsCardRestrictions =
         {
             /// The card brands to block. If a customer enters or selects a card belonging to a blocked brand, they can't complete the payment.
             [<Config.Form>]
             BrandsBlocked: Create'PaymentMethodOptionsCardRestrictionsBrandsBlocked list option
+            /// Card funding types to block for this Checkout Session. Supported values are `credit`, `debit`, and `prepaid`.
+            [<Config.Form>]
+            FundingTypesBlocked: Create'PaymentMethodOptionsCardRestrictionsFundingTypesBlocked list option
         }
 
     type Create'PaymentMethodOptionsCardRestrictions with
-        static member New(?brandsBlocked: Create'PaymentMethodOptionsCardRestrictionsBrandsBlocked list) =
+        static member New(?brandsBlocked: Create'PaymentMethodOptionsCardRestrictionsBrandsBlocked list, ?fundingTypesBlocked: Create'PaymentMethodOptionsCardRestrictionsFundingTypesBlocked list) =
             {
                 BrandsBlocked = brandsBlocked
+                FundingTypesBlocked = fundingTypesBlocked
             }
 
     type Create'PaymentMethodOptionsCardSetupFutureUsage =
@@ -2229,17 +2341,26 @@ module CheckoutSessions =
 
     type Create'PaymentMethodOptionsPaycoCaptureMethod = | Manual
 
+    type Create'PaymentMethodOptionsPaycoSetupFutureUsage = | [<JsonPropertyName("none")>] None'
+
     type Create'PaymentMethodOptionsPayco =
         {
             /// Controls when the funds will be captured from the customer's account.
             [<Config.Form>]
             CaptureMethod: Create'PaymentMethodOptionsPaycoCaptureMethod option
+            /// Indicates that you intend to make future payments with this PaymentIntent's payment method.
+            /// If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+            /// If the payment method is `card_present` and isn't a digital wallet, Stripe creates and attaches a [generated_card](/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+            /// When processing card payments, Stripe uses `setup_future_usage` to help you comply with regional legislation and network rules, such as [SCA](/strong-customer-authentication).
+            [<Config.Form>]
+            SetupFutureUsage: Create'PaymentMethodOptionsPaycoSetupFutureUsage option
         }
 
     type Create'PaymentMethodOptionsPayco with
-        static member New(?captureMethod: Create'PaymentMethodOptionsPaycoCaptureMethod) =
+        static member New(?captureMethod: Create'PaymentMethodOptionsPaycoCaptureMethod, ?setupFutureUsage: Create'PaymentMethodOptionsPaycoSetupFutureUsage) =
             {
                 CaptureMethod = captureMethod
+                SetupFutureUsage = setupFutureUsage
             }
 
     type Create'PaymentMethodOptionsPaynowSetupFutureUsage = | [<JsonPropertyName("none")>] None'
@@ -2530,17 +2651,26 @@ module CheckoutSessions =
 
     type Create'PaymentMethodOptionsSamsungPayCaptureMethod = | Manual
 
+    type Create'PaymentMethodOptionsSamsungPaySetupFutureUsage = | [<JsonPropertyName("none")>] None'
+
     type Create'PaymentMethodOptionsSamsungPay =
         {
             /// Controls when the funds will be captured from the customer's account.
             [<Config.Form>]
             CaptureMethod: Create'PaymentMethodOptionsSamsungPayCaptureMethod option
+            /// Indicates that you intend to make future payments with this PaymentIntent's payment method.
+            /// If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+            /// If the payment method is `card_present` and isn't a digital wallet, Stripe creates and attaches a [generated_card](/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+            /// When processing card payments, Stripe uses `setup_future_usage` to help you comply with regional legislation and network rules, such as [SCA](/strong-customer-authentication).
+            [<Config.Form>]
+            SetupFutureUsage: Create'PaymentMethodOptionsSamsungPaySetupFutureUsage option
         }
 
     type Create'PaymentMethodOptionsSamsungPay with
-        static member New(?captureMethod: Create'PaymentMethodOptionsSamsungPayCaptureMethod) =
+        static member New(?captureMethod: Create'PaymentMethodOptionsSamsungPayCaptureMethod, ?setupFutureUsage: Create'PaymentMethodOptionsSamsungPaySetupFutureUsage) =
             {
                 CaptureMethod = captureMethod
+                SetupFutureUsage = setupFutureUsage
             }
 
     type Create'PaymentMethodOptionsSatispayCaptureMethod = | Manual
@@ -2613,6 +2743,21 @@ module CheckoutSessions =
                 MandateOptions = mandateOptions
                 SetupFutureUsage = setupFutureUsage
                 TargetDate = targetDate
+            }
+
+    type Create'PaymentMethodOptionsSequraCaptureMethod = | Manual
+
+    type Create'PaymentMethodOptionsSequra =
+        {
+            /// Controls when the funds will be captured from the customer's account.
+            [<Config.Form>]
+            CaptureMethod: Create'PaymentMethodOptionsSequraCaptureMethod option
+        }
+
+    type Create'PaymentMethodOptionsSequra with
+        static member New(?captureMethod: Create'PaymentMethodOptionsSequraCaptureMethod) =
+            {
+                CaptureMethod = captureMethod
             }
 
     type Create'PaymentMethodOptionsSofortSetupFutureUsage = | [<JsonPropertyName("none")>] None'
@@ -2868,6 +3013,9 @@ module CheckoutSessions =
             /// contains details about the Billie payment method options.
             [<Config.Form>]
             Billie: Create'PaymentMethodOptionsBillie option
+            /// contains details about the BLIK payment method options.
+            [<Config.Form>]
+            Blik: Create'PaymentMethodOptionsBlik option
             /// contains details about the Boleto payment method options.
             [<Config.Form>]
             Boleto: Create'PaymentMethodOptionsBoleto option
@@ -2964,6 +3112,9 @@ module CheckoutSessions =
             /// contains details about the Sepa Debit payment method options.
             [<Config.Form>]
             SepaDebit: Create'PaymentMethodOptionsSepaDebit option
+            /// contains details about the SeQura payment method options.
+            [<Config.Form>]
+            Sequra: Create'PaymentMethodOptionsSequra option
             /// contains details about the Sofort payment method options.
             [<Config.Form>]
             Sofort: Create'PaymentMethodOptionsSofort option
@@ -2988,7 +3139,7 @@ module CheckoutSessions =
         }
 
     type Create'PaymentMethodOptions with
-        static member New(?acssDebit: Create'PaymentMethodOptionsAcssDebit, ?affirm: Create'PaymentMethodOptionsAffirm, ?afterpayClearpay: Create'PaymentMethodOptionsAfterpayClearpay, ?alipay: Create'PaymentMethodOptionsAlipay, ?alma: Create'PaymentMethodOptionsAlma, ?amazonPay: Create'PaymentMethodOptionsAmazonPay, ?auBecsDebit: Create'PaymentMethodOptionsAuBecsDebit, ?bacsDebit: Create'PaymentMethodOptionsBacsDebit, ?bancontact: Create'PaymentMethodOptionsBancontact, ?billie: Create'PaymentMethodOptionsBillie, ?boleto: Create'PaymentMethodOptionsBoleto, ?card: Create'PaymentMethodOptionsCard, ?cashapp: Create'PaymentMethodOptionsCashapp, ?crypto: Create'PaymentMethodOptionsCrypto, ?customerBalance: Create'PaymentMethodOptionsCustomerBalance, ?demoPay: Create'PaymentMethodOptionsDemoPay, ?eps: Create'PaymentMethodOptionsEps, ?fpx: Create'PaymentMethodOptionsFpx, ?giropay: Create'PaymentMethodOptionsGiropay, ?grabpay: Create'PaymentMethodOptionsGrabpay, ?ideal: Create'PaymentMethodOptionsIdeal, ?kakaoPay: Create'PaymentMethodOptionsKakaoPay, ?klarna: Create'PaymentMethodOptionsKlarna, ?konbini: Create'PaymentMethodOptionsKonbini, ?krCard: Create'PaymentMethodOptionsKrCard, ?link: Create'PaymentMethodOptionsLink, ?mobilepay: Create'PaymentMethodOptionsMobilepay, ?multibanco: Create'PaymentMethodOptionsMultibanco, ?naverPay: Create'PaymentMethodOptionsNaverPay, ?oxxo: Create'PaymentMethodOptionsOxxo, ?p24: Create'PaymentMethodOptionsP24, ?payByBank: string, ?payco: Create'PaymentMethodOptionsPayco, ?paynow: Create'PaymentMethodOptionsPaynow, ?paypal: Create'PaymentMethodOptionsPaypal, ?payto: Create'PaymentMethodOptionsPayto, ?pix: Create'PaymentMethodOptionsPix, ?revolutPay: Create'PaymentMethodOptionsRevolutPay, ?samsungPay: Create'PaymentMethodOptionsSamsungPay, ?satispay: Create'PaymentMethodOptionsSatispay, ?scalapay: Create'PaymentMethodOptionsScalapay, ?sepaDebit: Create'PaymentMethodOptionsSepaDebit, ?sofort: Create'PaymentMethodOptionsSofort, ?sunbit: Create'PaymentMethodOptionsSunbit, ?swish: Create'PaymentMethodOptionsSwish, ?twint: Create'PaymentMethodOptionsTwint, ?upi: Create'PaymentMethodOptionsUpi, ?usBankAccount: Create'PaymentMethodOptionsUsBankAccount, ?wechatPay: Create'PaymentMethodOptionsWechatPay) =
+        static member New(?acssDebit: Create'PaymentMethodOptionsAcssDebit, ?affirm: Create'PaymentMethodOptionsAffirm, ?afterpayClearpay: Create'PaymentMethodOptionsAfterpayClearpay, ?alipay: Create'PaymentMethodOptionsAlipay, ?alma: Create'PaymentMethodOptionsAlma, ?amazonPay: Create'PaymentMethodOptionsAmazonPay, ?auBecsDebit: Create'PaymentMethodOptionsAuBecsDebit, ?bacsDebit: Create'PaymentMethodOptionsBacsDebit, ?bancontact: Create'PaymentMethodOptionsBancontact, ?billie: Create'PaymentMethodOptionsBillie, ?blik: Create'PaymentMethodOptionsBlik, ?boleto: Create'PaymentMethodOptionsBoleto, ?card: Create'PaymentMethodOptionsCard, ?cashapp: Create'PaymentMethodOptionsCashapp, ?crypto: Create'PaymentMethodOptionsCrypto, ?customerBalance: Create'PaymentMethodOptionsCustomerBalance, ?demoPay: Create'PaymentMethodOptionsDemoPay, ?eps: Create'PaymentMethodOptionsEps, ?fpx: Create'PaymentMethodOptionsFpx, ?giropay: Create'PaymentMethodOptionsGiropay, ?grabpay: Create'PaymentMethodOptionsGrabpay, ?ideal: Create'PaymentMethodOptionsIdeal, ?kakaoPay: Create'PaymentMethodOptionsKakaoPay, ?klarna: Create'PaymentMethodOptionsKlarna, ?konbini: Create'PaymentMethodOptionsKonbini, ?krCard: Create'PaymentMethodOptionsKrCard, ?link: Create'PaymentMethodOptionsLink, ?mobilepay: Create'PaymentMethodOptionsMobilepay, ?multibanco: Create'PaymentMethodOptionsMultibanco, ?naverPay: Create'PaymentMethodOptionsNaverPay, ?oxxo: Create'PaymentMethodOptionsOxxo, ?p24: Create'PaymentMethodOptionsP24, ?payByBank: string, ?payco: Create'PaymentMethodOptionsPayco, ?paynow: Create'PaymentMethodOptionsPaynow, ?paypal: Create'PaymentMethodOptionsPaypal, ?payto: Create'PaymentMethodOptionsPayto, ?pix: Create'PaymentMethodOptionsPix, ?revolutPay: Create'PaymentMethodOptionsRevolutPay, ?samsungPay: Create'PaymentMethodOptionsSamsungPay, ?satispay: Create'PaymentMethodOptionsSatispay, ?scalapay: Create'PaymentMethodOptionsScalapay, ?sepaDebit: Create'PaymentMethodOptionsSepaDebit, ?sequra: Create'PaymentMethodOptionsSequra, ?sofort: Create'PaymentMethodOptionsSofort, ?sunbit: Create'PaymentMethodOptionsSunbit, ?swish: Create'PaymentMethodOptionsSwish, ?twint: Create'PaymentMethodOptionsTwint, ?upi: Create'PaymentMethodOptionsUpi, ?usBankAccount: Create'PaymentMethodOptionsUsBankAccount, ?wechatPay: Create'PaymentMethodOptionsWechatPay) =
             {
                 AcssDebit = acssDebit
                 Affirm = affirm
@@ -3000,6 +3151,7 @@ module CheckoutSessions =
                 BacsDebit = bacsDebit
                 Bancontact = bancontact
                 Billie = billie
+                Blik = blik
                 Boleto = boleto
                 Card = card
                 Cashapp = cashapp
@@ -3032,6 +3184,7 @@ module CheckoutSessions =
                 Satispay = satispay
                 Scalapay = scalapay
                 SepaDebit = sepaDebit
+                Sequra = sequra
                 Sofort = sofort
                 Sunbit = sunbit
                 Swish = swish
@@ -3041,62 +3194,6 @@ module CheckoutSessions =
                 WechatPay = wechatPay
             }
 
-    type Create'PaymentMethodTypes =
-        | AcssDebit
-        | Affirm
-        | AfterpayClearpay
-        | Alipay
-        | Alma
-        | AmazonPay
-        | AuBecsDebit
-        | BacsDebit
-        | Bancontact
-        | Billie
-        | Bizum
-        | Blik
-        | Boleto
-        | Card
-        | Cashapp
-        | Crypto
-        | CustomerBalance
-        | Eps
-        | Fpx
-        | Giropay
-        | Grabpay
-        | Ideal
-        | KakaoPay
-        | Klarna
-        | Konbini
-        | KrCard
-        | Link
-        | MbWay
-        | Mobilepay
-        | Multibanco
-        | NaverPay
-        | NzBankAccount
-        | Oxxo
-        | [<JsonPropertyName("p24")>] P24
-        | PayByBank
-        | Payco
-        | Paynow
-        | Paypal
-        | Payto
-        | Pix
-        | Promptpay
-        | RevolutPay
-        | SamsungPay
-        | Satispay
-        | Scalapay
-        | SepaDebit
-        | Sofort
-        | Sunbit
-        | Swish
-        | Twint
-        | Upi
-        | UsBankAccount
-        | WechatPay
-        | Zip
-
     type Create'PermissionsUpdateShippingDetails =
         | ClientOnly
         | ServerOnly
@@ -3105,7 +3202,7 @@ module CheckoutSessions =
         {
             /// Determines which entity is allowed to update the shipping details.
             /// Default is `client_only`. Stripe Checkout client will automatically update the shipping details. If set to `server_only`, only your server is allowed to update the shipping details.
-            /// When set to `server_only`, you must add the onShippingDetailsChange event handler when initializing the Stripe Checkout client and manually update the shipping details from your server using the Stripe API.
+            /// This parameter is only supported when `ui_mode=elements`.
             [<Config.Form>]
             UpdateShippingDetails: Create'PermissionsUpdateShippingDetails option
         }
@@ -3779,7 +3876,7 @@ module CheckoutSessions =
             /// A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account. To use an application fee percent, the request must be made on behalf of another account, using the `Stripe-Account` header or an OAuth key. For more information, see the application fees [documentation](https://stripe.com/docs/connect/subscriptions#collecting-fees-on-subscriptions).
             [<Config.Form>]
             ApplicationFeePercent: decimal option
-            /// A future timestamp to anchor the subscription's billing cycle for new subscriptions. You can't set this parameter if `ui_mode` is `elements`.
+            /// A future timestamp to anchor the subscription's billing cycle for new subscriptions.
             [<Config.Form>]
             BillingCycleAnchor: DateTime option
             /// Configures when the subscription schedule's billing cycle anchors to a specific day of the week or month.
@@ -3915,6 +4012,12 @@ module CheckoutSessions =
             /// Enables user redeemable promotion codes.
             [<Config.Form>]
             AllowPromotionCodes: bool option
+            /// A list of the types of payment methods (e.g., `card`) this Checkout Session can accept.
+            /// Unlike `payment_method_types`, this acts as a filter on the dynamically computed set of
+            /// eligible payment methods rather than an explicit static list. Only payment methods that
+            /// are both dynamically eligible and present in this list will be offered to the customer.
+            [<Config.Form>]
+            AllowedPaymentMethodTypes: Create'AllowedPaymentMethodTypes list option
             /// Settings for automatic tax lookup for this session and resulting payments, invoices, and subscriptions.
             [<Config.Form>]
             AutomaticTax: Create'AutomaticTax option
@@ -4019,7 +4122,7 @@ module CheckoutSessions =
             /// There is a maximum of 10 optional items allowed on a Checkout Session, and the existing limits on the number of line items allowed on a Checkout Session apply to the combined number of line items and optional items.
             /// For `payment` mode, there is a maximum of 100 combined line items and optional items, however it is recommended to consolidate items if there are more than a few dozen.
             /// For `subscription` mode, there is a maximum of 20 line items and optional items with recurring Prices and 20 line items and optional items with one-time Prices.
-            /// You can't set this parameter if `ui_mode` is `custom`.
+            /// You can't set this parameter if `ui_mode` is `elements` or `form`.
             [<Config.Form>]
             OptionalItems: Create'OptionalItems list option
             /// Where the user is coming from. This informs the optimizations that are applied to the session. You can't set this parameter if `ui_mode` is `elements`.
@@ -4043,16 +4146,6 @@ module CheckoutSessions =
             /// Payment-method-specific configuration.
             [<Config.Form>]
             PaymentMethodOptions: Create'PaymentMethodOptions option
-            /// A list of the types of payment methods (e.g., `card`) this Checkout Session can accept.
-            /// You can omit this attribute to manage your payment methods from the [Stripe Dashboard](https://dashboard.stripe.com/settings/payment_methods).
-            /// See [Dynamic Payment Methods](https://docs.stripe.com/payments/payment-methods/integration-options#using-dynamic-payment-methods) for more details.
-            /// Read more about the supported payment methods and their requirements in our [payment
-            /// method details guide](/docs/payments/checkout/payment-methods).
-            /// If multiple payment methods are passed, Checkout will dynamically reorder them to
-            /// prioritize the most relevant payment methods based on the customer's location and
-            /// other characteristics.
-            [<Config.Form>]
-            PaymentMethodTypes: Create'PaymentMethodTypes list option
             /// This property is used to set up permissions for various actions (e.g., update) on the CheckoutSession object. Can only be set when creating `embedded` or `custom` sessions.
             /// For specific permissions, please refer to their dedicated subsections, such as `permissions.update_shipping_details`.
             [<Config.Form>]
@@ -4111,11 +4204,12 @@ module CheckoutSessions =
         }
 
     type CreateOptions with
-        static member New(?adaptivePricing: Create'AdaptivePricing, ?afterExpiration: Create'AfterExpiration, ?allowPromotionCodes: bool, ?automaticTax: Create'AutomaticTax, ?billingAddressCollection: Create'BillingAddressCollection, ?brandingSettings: Create'BrandingSettings, ?cancelUrl: string, ?clientReferenceId: string, ?consentCollection: Create'ConsentCollection, ?currency: IsoTypes.IsoCurrencyCode, ?customFields: Create'CustomFields list, ?customText: Create'CustomText, ?customer: string, ?customerAccount: string, ?customerCreation: Create'CustomerCreation, ?customerEmail: string, ?customerUpdate: Create'CustomerUpdate, ?discounts: Create'Discounts list, ?excludedPaymentMethodTypes: Create'ExcludedPaymentMethodTypes list, ?expand: string list, ?expiresAt: DateTime, ?integrationIdentifier: string, ?invoiceCreation: Create'InvoiceCreation, ?lineItems: Create'LineItems list, ?locale: Create'Locale, ?managedPayments: Create'ManagedPayments, ?metadata: Map<string, string>, ?mode: Create'Mode, ?nameCollection: Create'NameCollection, ?optionalItems: Create'OptionalItems list, ?originContext: Create'OriginContext, ?paymentIntentData: Create'PaymentIntentData, ?paymentMethodCollection: Create'PaymentMethodCollection, ?paymentMethodConfiguration: string, ?paymentMethodData: Create'PaymentMethodData, ?paymentMethodOptions: Create'PaymentMethodOptions, ?paymentMethodTypes: Create'PaymentMethodTypes list, ?permissions: Create'Permissions, ?phoneNumberCollection: Create'PhoneNumberCollection, ?redirectOnCompletion: Create'RedirectOnCompletion, ?returnUrl: string, ?savedPaymentMethodOptions: Create'SavedPaymentMethodOptions, ?setupIntentData: Create'SetupIntentData, ?shippingAddressCollection: Create'ShippingAddressCollection, ?shippingOptions: Create'ShippingOptions list, ?submitType: Create'SubmitType, ?subscriptionData: Create'SubscriptionData, ?successUrl: string, ?taxIdCollection: Create'TaxIdCollection, ?uiMode: Create'UiMode, ?walletOptions: Create'WalletOptions) =
+        static member New(?adaptivePricing: Create'AdaptivePricing, ?afterExpiration: Create'AfterExpiration, ?allowPromotionCodes: bool, ?allowedPaymentMethodTypes: Create'AllowedPaymentMethodTypes list, ?automaticTax: Create'AutomaticTax, ?billingAddressCollection: Create'BillingAddressCollection, ?brandingSettings: Create'BrandingSettings, ?cancelUrl: string, ?clientReferenceId: string, ?consentCollection: Create'ConsentCollection, ?currency: IsoTypes.IsoCurrencyCode, ?customFields: Create'CustomFields list, ?customText: Create'CustomText, ?customer: string, ?customerAccount: string, ?customerCreation: Create'CustomerCreation, ?customerEmail: string, ?customerUpdate: Create'CustomerUpdate, ?discounts: Create'Discounts list, ?excludedPaymentMethodTypes: Create'ExcludedPaymentMethodTypes list, ?expand: string list, ?expiresAt: DateTime, ?integrationIdentifier: string, ?invoiceCreation: Create'InvoiceCreation, ?lineItems: Create'LineItems list, ?locale: Create'Locale, ?managedPayments: Create'ManagedPayments, ?metadata: Map<string, string>, ?mode: Create'Mode, ?nameCollection: Create'NameCollection, ?optionalItems: Create'OptionalItems list, ?originContext: Create'OriginContext, ?paymentIntentData: Create'PaymentIntentData, ?paymentMethodCollection: Create'PaymentMethodCollection, ?paymentMethodConfiguration: string, ?paymentMethodData: Create'PaymentMethodData, ?paymentMethodOptions: Create'PaymentMethodOptions, ?permissions: Create'Permissions, ?phoneNumberCollection: Create'PhoneNumberCollection, ?redirectOnCompletion: Create'RedirectOnCompletion, ?returnUrl: string, ?savedPaymentMethodOptions: Create'SavedPaymentMethodOptions, ?setupIntentData: Create'SetupIntentData, ?shippingAddressCollection: Create'ShippingAddressCollection, ?shippingOptions: Create'ShippingOptions list, ?submitType: Create'SubmitType, ?subscriptionData: Create'SubscriptionData, ?successUrl: string, ?taxIdCollection: Create'TaxIdCollection, ?uiMode: Create'UiMode, ?walletOptions: Create'WalletOptions) =
             {
                 AdaptivePricing = adaptivePricing
                 AfterExpiration = afterExpiration
                 AllowPromotionCodes = allowPromotionCodes
+                AllowedPaymentMethodTypes = allowedPaymentMethodTypes
                 AutomaticTax = automaticTax
                 BillingAddressCollection = billingAddressCollection
                 BrandingSettings = brandingSettings
@@ -4149,7 +4243,6 @@ module CheckoutSessions =
                 PaymentMethodConfiguration = paymentMethodConfiguration
                 PaymentMethodData = paymentMethodData
                 PaymentMethodOptions = paymentMethodOptions
-                PaymentMethodTypes = paymentMethodTypes
                 Permissions = permissions
                 PhoneNumberCollection = phoneNumberCollection
                 RedirectOnCompletion = redirectOnCompletion
@@ -4266,6 +4359,23 @@ module CheckoutSessions =
                 Minimum = minimum
             }
 
+    type Update'LineItemsPriceDataProductDataTaxDetails =
+        {
+            /// A tax location ID. Depending on the [tax code](/tax/tax-for-tickets/reference/tax-location-performance), this is required, optional, or not supported.
+            [<Config.Form>]
+            PerformanceLocation: string option
+            /// A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
+            [<Config.Form>]
+            TaxCode: Choice<string,string> option
+        }
+
+    type Update'LineItemsPriceDataProductDataTaxDetails with
+        static member New(?performanceLocation: string, ?taxCode: Choice<string,string>) =
+            {
+                PerformanceLocation = performanceLocation
+                TaxCode = taxCode
+            }
+
     type Update'LineItemsPriceDataProductData =
         {
             /// The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
@@ -4283,19 +4393,23 @@ module CheckoutSessions =
             /// A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
             [<Config.Form>]
             TaxCode: string option
+            /// Tax details for this product, including the [tax code](/tax/tax-codes) and an optional performance location.
+            [<Config.Form>]
+            TaxDetails: Update'LineItemsPriceDataProductDataTaxDetails option
             /// A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
             [<Config.Form>]
             UnitLabel: string option
         }
 
     type Update'LineItemsPriceDataProductData with
-        static member New(?description: string, ?images: string list, ?metadata: Map<string, string>, ?name: string, ?taxCode: string, ?unitLabel: string) =
+        static member New(?description: string, ?images: string list, ?metadata: Map<string, string>, ?name: string, ?taxCode: string, ?taxDetails: Update'LineItemsPriceDataProductDataTaxDetails, ?unitLabel: string) =
             {
                 Description = description
                 Images = images
                 Metadata = metadata
                 Name = name
                 TaxCode = taxCode
+                TaxDetails = taxDetails
                 UnitLabel = unitLabel
             }
 

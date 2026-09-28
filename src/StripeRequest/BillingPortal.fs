@@ -5,7 +5,7 @@ open System.Text.Json.Serialization
 open Stripe.BillingPortal
 open System
 
-[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.2.0")>]
+[<System.CodeDom.Compiler.GeneratedCode("FunStripe", "2.3.0")>]
 module BillingPortalConfigurations =
 
     type ListOptions =
@@ -132,15 +132,19 @@ module BillingPortalConfigurations =
             /// Whether the feature is enabled.
             [<Config.Form>]
             Enabled: bool option
+            /// The IDs of custom feedback options to use for this cancellation reason.
+            [<Config.Form>]
+            FeedbackOptions: Choice<string list,string> option
             /// Which cancellation reasons will be given as options to the customer.
             [<Config.Form>]
             Options: Choice<Create'FeaturesSubscriptionCancelCancellationReasonOptions list,string> option
         }
 
     type Create'FeaturesSubscriptionCancelCancellationReason with
-        static member New(?enabled: bool, ?options: Choice<Create'FeaturesSubscriptionCancelCancellationReasonOptions list,string>) =
+        static member New(?enabled: bool, ?feedbackOptions: Choice<string list,string>, ?options: Choice<Create'FeaturesSubscriptionCancelCancellationReasonOptions list,string>) =
             {
                 Enabled = enabled
+                FeedbackOptions = feedbackOptions
                 Options = options
             }
 
@@ -352,7 +356,7 @@ module BillingPortalConfigurations =
             /// The business information shown to customers in the portal.
             [<Config.Form>]
             BusinessProfile: Create'BusinessProfile option
-            /// The default URL to redirect customers to when they click on the portal's link to return to your website. This can be [overriden](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) when creating the session.
+            /// The default URL to redirect customers to when they click on the portal's link to return to your website. This can be [overridden](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) when creating the session.
             [<Config.Form>]
             DefaultReturnUrl: Choice<string,string> option
             /// Specifies which fields in the response should be expanded.
@@ -491,15 +495,19 @@ module BillingPortalConfigurations =
             /// Whether the feature is enabled.
             [<Config.Form>]
             Enabled: bool option
+            /// The IDs of custom feedback options to use for this cancellation reason.
+            [<Config.Form>]
+            FeedbackOptions: Choice<string list,string> option
             /// Which cancellation reasons will be given as options to the customer.
             [<Config.Form>]
             Options: Choice<Update'FeaturesSubscriptionCancelCancellationReasonOptions list,string> option
         }
 
     type Update'FeaturesSubscriptionCancelCancellationReason with
-        static member New(?enabled: bool, ?options: Choice<Update'FeaturesSubscriptionCancelCancellationReasonOptions list,string>) =
+        static member New(?enabled: bool, ?feedbackOptions: Choice<string list,string>, ?options: Choice<Update'FeaturesSubscriptionCancelCancellationReasonOptions list,string>) =
             {
                 Enabled = enabled
+                FeedbackOptions = feedbackOptions
                 Options = options
             }
 
@@ -717,7 +725,7 @@ module BillingPortalConfigurations =
             /// The business information shown to customers in the portal.
             [<Config.Form>]
             BusinessProfile: Update'BusinessProfile option
-            /// The default URL to redirect customers to when they click on the portal's link to return to your website. This can be [overriden](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) when creating the session.
+            /// The default URL to redirect customers to when they click on the portal's link to return to your website. This can be [overridden](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) when creating the session.
             [<Config.Form>]
             DefaultReturnUrl: Choice<string,string> option
             /// Specifies which fields in the response should be expanded.
@@ -949,6 +957,7 @@ module BillingPortalSessions =
             }
 
     type Create'FlowDataType =
+        | CustomerUpdate
         | PaymentMethodUpdate
         | SubscriptionCancel
         | SubscriptionUpdate
