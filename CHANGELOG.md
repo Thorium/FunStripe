@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 Version numbers follow the `FunStripeLite` package from v1.0.0 onward. Where the same change was released for `FunStripe`, the equivalent version is noted in brackets, e.g. `[FunStripe 0.9.2]`. Entries marked `FunStripe only` have no `FunStripeLite` equivalent.
 
+## [3.1.0] - 2026-11-09
+
+### Changed
+- Regenerated against Stripe OpenAPI spec `2026-10-28.endive` (was `2026-09-30.endive`)
+
 ## [3.0.0] - 2026-10-01
 
 Targets Stripe's new **endive** release train (`2026-09-30.endive`). Stripe uses a new train for breaking API changes, and several of them surface as breaking changes in FunStripe's types, so this is a major release.
